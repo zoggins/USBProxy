@@ -546,7 +546,7 @@ int DeviceProxy_LibUSB::control_request_timeout_override(int timeout)
 	return timeout;
 }
 
-bool DeviceProxy_LibUSB::swallow_setup_packet_send_error(usb_ctrlrequest* setup_packet)
+bool DeviceProxy_LibUSB::swallow_setup_packet_send_error(const usb_ctrlrequest* setup_packet)
 {
 	return false;
 }
