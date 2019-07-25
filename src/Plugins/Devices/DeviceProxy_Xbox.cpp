@@ -543,7 +543,7 @@ void DeviceProxy_Xbox::release_interface(uint8_t interface) {
 
 int DeviceProxy_Xbox::control_request_timeout_override(int timeout)
 {
-	return 5;
+	return 10;
 }
 
 bool DeviceProxy_Xbox::swallow_setup_packet_send_error(const usb_ctrlrequest* setup_packet)
