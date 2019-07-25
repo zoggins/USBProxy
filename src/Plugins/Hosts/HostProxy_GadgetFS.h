@@ -33,6 +33,8 @@ private:
 
 	usb_ctrlrequest lastControl;
 
+protected:
+
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
 
 public:

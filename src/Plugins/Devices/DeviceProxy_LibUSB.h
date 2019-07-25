@@ -33,9 +33,12 @@ private:
 	} epInterfaces[0x10];
 
 	bool endpoint_interface_claimed(uint8_t endpoint);
+
+protected:
 	virtual int control_request_timeout_override(int timeout);
 	virtual bool swallow_setup_packet_send_error(const usb_ctrlrequest* setup_packet);
 	virtual int check_device_response(libusb_device_handle* dev_handle);
+
 public:
 	DeviceProxy_LibUSB(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
 			bool includeHubs = false);
