@@ -34,7 +34,7 @@ private:
 
 	bool endpoint_interface_claimed(uint8_t endpoint);
 	virtual int DeviceProxy_LibUSB::control_request_timeout_override(int timeout);
-	virtual bool DeviceProxy_LibUSB::swallow_setup_packet_send_error(SetupPacket* setup_packet);
+	virtual bool DeviceProxy_LibUSB::swallow_setup_packet_send_error(usb_ctrlrequest* setup_packet);
 	virtual int DeviceProxy_LibUSB::check_device_response(libusb_device_handle* dev_handle);
 public:
 	DeviceProxy_LibUSB(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,

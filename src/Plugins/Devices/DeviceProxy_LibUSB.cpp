@@ -239,7 +239,6 @@ int DeviceProxy_LibUSB::connect(int vendorId, int productId, bool includeHubs) {
 	//end
 
 	//check that device is responsive
-	unsigned char unused[4];
 	rc = check_device_response(dev_handle);
 	if (rc < 0) {
 		cerr << "Device unresponsive: " << libusb_strerror((libusb_error)rc) << endl;
@@ -360,7 +359,7 @@ int DeviceProxy_LibUSB::control_request(const usb_ctrlrequest *setup_packet, int
 	int rc = libusb_control_transfer(dev_handle, setup_packet->bRequestType, setup_packet->bRequest,
 		setup_packet->wValue, setup_packet->wIndex, dataptr, setup_packet->wLength, timeout);
 
-	if (rc < 0 && !swallow_setup_packet_send_error()) {
+	if (rc < 0 && !swallow_setup_packet_send_error(setup_packet)) {
 		if (debugLevel) {
 			cerr << "Error sending setup packet: " << libusb_strerror((libusb_error)rc) << endl;
 		}
@@ -547,7 +546,7 @@ int DeviceProxy_LibUSB::control_request_timeout_override(int timeout)
 	return timeout;
 }
 
-bool DeviceProxy_LibUSB::swallow_setup_packet_send_error(SetupPacket* setup_packet)
+bool DeviceProxy_LibUSB::swallow_setup_packet_send_error(usb_ctrlrequest* setup_packet)
 {
 	return false;
 }
