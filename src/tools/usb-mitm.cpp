@@ -1,5 +1,4 @@
-/*
- * This file is part of USBProxy.
+/* This file is part of USBProxy.
  */
 
 #include <errno.h>
@@ -157,9 +156,12 @@ extern "C" int main(int argc, char **argv)
 			cfg->set("PacketFilter_PcapLogger::Filename", optarg);
 			break;
 		case 'x':
-			cfg->add_to_vector("Plugins", "Injector_UDPHID");
-			cfg->set("Injector_UDP::port", "12345");
-			cfg->add_to_vector("Plugins", "PacketFilter_UDPHID");
+			cfg->add_to_vector("Plugins", "PacketFilter_Xbox");
+			cfg->add_pointer("PacketFilter_Xbox::file", stderr);
+			//cfg->add_to_vector("Plugins", "Injector_UDPHID");
+			//cfg->set("Injector_UDP::port", "12345");
+			//cfg->add_to_vector("Plugins", "PacketFilter_UDPHID");
+			
 			break;
 		case 'h':
 		default:

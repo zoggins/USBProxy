@@ -43,7 +43,7 @@ public:
 	DeviceProxy_LibUSB(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
 			bool includeHubs = false);
 	DeviceProxy_LibUSB(ConfigParser *cfg);
-	~DeviceProxy_LibUSB();
+	virtual ~DeviceProxy_LibUSB();
 
 	int connect(int timeout = 250);
 	int connect(int vendorId, int productId, bool includeHubs);

@@ -24,6 +24,12 @@ protected:
 		// Need to actually think of a way to do this for the xbox
 		return 0;
 	}
+
+public:
+	DeviceProxy_Xbox(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
+		bool includeHubs = false) : DeviceProxy_LibUSB(vendorId, productId, includeHubs) {}
+	DeviceProxy_Xbox(ConfigParser *cfg) : DeviceProxy_LibUSB(cfg) {} 
+	virtual ~DeviceProxy_Xbox() {};
 };
 
 #endif /* USBPROXY_DEVICEPROXY_XBOX_H */

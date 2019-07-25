@@ -6,7 +6,7 @@
 #include "PacketFilter_StreamLog.h"
 
 PacketFilter_Xbox::PacketFilter_Xbox(ConfigParser *cfg) {
-	file  = (FILE *) cfg->get_pointer("PacketFilter_StreamLog::file");
+	file  = (FILE *) cfg->get_pointer("PacketFilter_Xbox::file");
 }
 
 void PacketFilter_Xbox::filter_packet(Packet* packet) {
