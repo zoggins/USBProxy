@@ -39,7 +39,7 @@ protected:
 
 public:
 	HostProxy_Xbox(ConfigParser *cfg);
-	virtual ~HostProxy_GadgetFS();
+	virtual ~HostProxy_Xbox();
 
 	int connect(Device* device,int timeout=250);
 	void disconnect();
