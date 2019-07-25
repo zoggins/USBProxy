@@ -274,7 +274,7 @@ int HostProxy_GadgetFS::control_request(usb_ctrlrequest *setup_packet, int *nbyt
 			if (lastControl.bRequest == USB_REQ_SET_CONFIGURATION
 				&& !(lastControl.bRequestType&0x80))
 			{
-				control_ack();
+				handle_USB_REQ_SET_CONFIGURATION();
 			}
 
 			if (!(lastControl.bRequestType&0x80) && lastControl.wLength) {
@@ -546,6 +546,11 @@ void HostProxy_GadgetFS::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,b
 		}
 		// end
 	}
+}
+
+void HostProxy_GadgetFS::handle_USB_REQ_SET_CONFIGURATION()
+{
+	control_ack();
 }
 
 static HostProxy_GadgetFS *proxy;

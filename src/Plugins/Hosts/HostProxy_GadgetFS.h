@@ -33,6 +33,8 @@ private:
 
 	usb_ctrlrequest lastControl;
 
+	virtual private void handle_USB_REQ_SET_CONFIGURATION();
+
 public:
 	HostProxy_GadgetFS(ConfigParser *cfg);
 	virtual ~HostProxy_GadgetFS();
