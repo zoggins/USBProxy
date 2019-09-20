@@ -112,7 +112,7 @@ int HostProxy_Xbox::generate_descriptor(Device* device) {
 
 				    // conversion is: newValue = log2(8*oldValue)+1
 				    int newValue = (log10(8*(epd->bInterval))/log10(2)) + 1;
-				    //fprintf(stderr,"old bInterval: %02X\ncalculated new bInterval: %02X\n",epd->bInterval,newValue);
+				    fprintf(stderr,"old bInterval: %02X\ncalculated new bInterval: %02X\n",epd->bInterval,newValue);
 				    memset(&epd->bInterval,newValue,1);
 				    pointer+= epd->bLength;
 				}
@@ -541,7 +541,7 @@ void HostProxy_Xbox::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,bool 
 						p_epout_async[epAddress&0x0f]=aio;
 					}
 				}
-				//fprintf(stderr,"Opened EP%02x\n",epAddress);
+				fprintf(stderr,"Opened EP%02x\n",epAddress);
 			}
 		}
 		// end
