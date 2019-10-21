@@ -23,10 +23,7 @@ void PacketFilter_PS3::filter_packet(Packet* packet) {
 				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
  
 		// analog buttons
-		for (int j = 14; j < 20; ++j)
-			for (int i = 0; i < 8; ++i)
-				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
-		for (int j = 22; j < 26; ++j)
+		for (int j = 14; j < 26; ++j)
 			for (int i = 0; i < 8; ++i)
 				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
 	}
