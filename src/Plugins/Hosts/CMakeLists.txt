@@ -28,13 +28,21 @@ set_source_files_properties(HostProxy_GadgetFS.cpp PROPERTIES COMPILE_FLAGS  "-s
 add_library(HostProxy_Xbox SHARED HostProxy_Xbox.cpp GadgetFS_helpers.c)
 set_target_properties(HostProxy_Xbox PROPERTIES PREFIX "")
 set_source_files_properties(HostProxy_Xbox.cpp PROPERTIES COMPILE_FLAGS  "-std=c++11 -pthread -Wall")
+add_library(HostProxy_PS3 SHARED HostProxy_PS3.cpp GadgetFS_helpers.c)
+set_target_properties(HostProxy_PS3 PROPERTIES PREFIX "")
+set_source_files_properties(HostProxy_PS3.cpp PROPERTIES COMPILE_FLAGS  "-std=c++11 -pthread -Wall")
 target_link_libraries(HostProxy_GadgetFS ${PLUGINS_LINK_LIBS})
 target_link_libraries(HostProxy_Xbox ${PLUGINS_LINK_LIBS})
+target_link_libraries(HostProxy_PS3 ${PLUGINS_LINK_LIBS})
 install(TARGETS HostProxy_GadgetFS
     LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
     COMPONENT sharedlibs
     )
 install(TARGETS HostProxy_Xbox
+    LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
+    COMPONENT sharedlibs
+    )
+install(TARGETS HostProxy_PS3
     LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
     COMPONENT sharedlibs
     )
