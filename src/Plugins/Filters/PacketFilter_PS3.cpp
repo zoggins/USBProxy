@@ -13,22 +13,20 @@ void PacketFilter_PS3::filter_packet(Packet* packet) {
 	if (packet->wLength == 49) {
 		
 		// digital buttons
-		for (int j = 5; j < 8; ++j)
+		for (int j = 2; j < 5; ++j)
 			for (int i = 0; i < 8; ++i)
 				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
 
 		// sticks
-		for (int j = 1; j < 5; ++j)
+		for (int j = 6; j < 10; ++j)
 			for (int i = 0; i < 8; ++i)
 				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
-
-		// triggers
-		for (int j = 8; j < 5; ++j)
-			for (int i = 0; i < 8; ++i)
-				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
-
+ 
 		// analog buttons
-		for (int j = 9; j < 19; ++j)
+		for (int j = 14; j < 20; ++j)
+			for (int i = 0; i < 8; ++i)
+				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
+		for (int j = 22; j < 26; ++j)
 			for (int i = 0; i < 8; ++i)
 				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
 	}
