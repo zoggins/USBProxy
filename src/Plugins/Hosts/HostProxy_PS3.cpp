@@ -2,7 +2,7 @@
  * This file is part of USBProxy.
  */
 
-#include "HostProxy_GadgetFS.h"
+#include "HostProxy_PS3.h"
 
 #include <cstring>
 #include <iostream>
