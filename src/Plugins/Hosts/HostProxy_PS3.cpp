@@ -174,7 +174,7 @@ int HostProxy_PS3::connect(Device* device,int timeout) {
 		char* hex=hex_string((void*)descriptor,descriptorLength);
 		fprintf(stderr,"%s\n",hex);
 		free(hex);
-		hex = hex_string((void*)fake_descriptor, 104);
+		hex = hex_string((void*)fake_ds3_descriptor, 104);
 		fprintf(stderr, "%s\n", hex);
 		free(hex);
 	}
@@ -187,7 +187,7 @@ int HostProxy_PS3::connect(Device* device,int timeout) {
 	}
 
 	//status = write(p_device_file, descriptor, descriptorLength);
-	status = write(p_device_file, fake_descriptor, 104);
+	status = write(p_device_file, fake_ds3_descriptor, 104);
 
 	if (status < 0) {
 		fprintf(stderr,"Fail on write %d %s\n",errno,strerror(errno));
