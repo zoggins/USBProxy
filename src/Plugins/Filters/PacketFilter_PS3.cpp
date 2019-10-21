@@ -3,7 +3,7 @@
  */
 
 #include "HexString.h"
-#include "PacketFilter_StreamLog.h"
+#include "PacketFilter_PS3.h"
 
 PacketFilter_PS3::PacketFilter_PS3(ConfigParser *cfg) {
 	file  = (FILE *) cfg->get_pointer("PacketFilter_StreamLog::file");
