@@ -6,7 +6,7 @@
 #include "PacketFilter_PS3.h"
 
 PacketFilter_PS3::PacketFilter_PS3(ConfigParser *cfg) {
-	file  = (FILE *) cfg->get_pointer("PacketFilter_PS3:file");
+	file  = (FILE *) cfg->get_pointer("PacketFilter_PS3::file");
 }
 
 void PacketFilter_PS3::filter_packet(Packet* packet) {
