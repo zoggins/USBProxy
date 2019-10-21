@@ -26,6 +26,8 @@ void PacketFilter_PS3::filter_packet(Packet* packet) {
 		for (int j = 14; j < 26; ++j)
 			for (int i = 0; i < 8; ++i)
 				fprintf(file, "%d", (packet->data[j] & (1 << i)) != 0);
+
+		fprintf(file, "\n");
 	}
 }
 void PacketFilter_PS3::filter_setup_packet(SetupPacket* packet,bool direction) {
