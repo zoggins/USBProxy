@@ -21,6 +21,14 @@
 #include "Interface.h"
 #include "Endpoint.h"
 
+static void aio_send_completion_handler(sigval_t sigval)
+{
+	struct aiocb* aio;
+	aio = (struct aiocb*)sigval.sival_ptr;
+	free((void*)aio->aio_buf);
+	aio->aio_buf = NULL;
+}
+
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
 	: HostProxy(*cfg)
 {
@@ -347,6 +355,13 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 	}
 
 	aiocb* aio=p_epin_async[number];
+
+	if (aio->aio_buf != NULL)
+	{
+		free((void*)aio->aio_buf);
+		aio->aio_buf = NULL;
+	}
+
 	aio->aio_buf=malloc(length);
 	memcpy((void*)(aio->aio_buf),dataptr,length);
 	aio->aio_nbytes=length;
@@ -522,7 +537,10 @@ void HostProxy_GadgetFS::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,b
 				aiocb* aio=new aiocb;
 				std::memset(aio, 0, sizeof(struct aiocb));
 				aio->aio_fildes = fd;
-				aio->aio_sigevent.sigev_notify = SIGEV_NONE;
+				aio->aio_sigevent.sigev_notify_function = aio_send_completion_hand$
+				aio->aio_sigevent.sigev_notify_attributes = NULL;
+				aio->aio_sigevent.sigev_notify = SIGEV_THREAD;
+				aio->aio_sigevent.sigev_value.sival_ptr = aio;
 				if (epAddress & 0x80) {
 					p_epin_async[epAddress&0x0f]=aio;
 				} else {
