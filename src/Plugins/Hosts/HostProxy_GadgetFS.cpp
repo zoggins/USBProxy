@@ -537,7 +537,7 @@ void HostProxy_GadgetFS::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,b
 				aiocb* aio=new aiocb;
 				std::memset(aio, 0, sizeof(struct aiocb));
 				aio->aio_fildes = fd;
-				aio->aio_sigevent.sigev_notify_function = aio_send_completion_hand$
+				aio->aio_sigevent.sigev_notify_function = aio_send_completion_handler;
 				aio->aio_sigevent.sigev_notify_attributes = NULL;
 				aio->aio_sigevent.sigev_notify = SIGEV_THREAD;
 				aio->aio_sigevent.sigev_value.sival_ptr = aio;
