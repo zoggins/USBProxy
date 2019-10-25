@@ -135,9 +135,9 @@ DeviceProxy_Xbox360::~DeviceProxy_Xbox360() {
 		libusb_exit(context);
 	}
 
-	free(manufacturer);
-	free(product);
-	free(serialNumber);
+	free((void*)manufacturer);
+	free((void*)product);
+	free((void*)serialNumber);
 }
 
 int DeviceProxy_Xbox360::connect(int timeout) {
