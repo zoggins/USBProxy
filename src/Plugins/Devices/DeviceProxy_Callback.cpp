@@ -142,3 +142,8 @@ extern "C" {
 		delete proxy;
 	}
 }
+
+bool DeviceProxy_Callback::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	return false;
+}

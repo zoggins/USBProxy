@@ -421,3 +421,7 @@ static int dot11_stringMaxIndex;
 	}
 }
 
+bool DeviceProxy_dot11::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	return false;
+}

@@ -556,3 +556,8 @@ int DeviceProxy_LibUSB::check_device_response(libusb_device_handle* dev_handle)
 	unsigned char unused[4];
 	return libusb_get_string_descriptor(dev_handle, 0, 0, unused, sizeof(unused));
 }
+
+bool DeviceProxy_LibUSB::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	return false;
+}

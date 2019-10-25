@@ -66,6 +66,8 @@ public:
 	void claim_interface(uint8_t interface);
 	void release_interface(uint8_t interface);
 
+	bool identify_controller(const char* manufacturer, const char* product, const char* serialNumber);
+
 	uint8_t get_address();
 	char* toString();
 };

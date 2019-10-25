@@ -359,3 +359,8 @@ extern "C" {
 		delete proxy;
 	}
 }
+
+bool DeviceProxy_Loopback::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	return false;
+}

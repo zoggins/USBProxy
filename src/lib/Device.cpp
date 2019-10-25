@@ -21,6 +21,32 @@
 
 //CLEANUP what happends if device is HS but host is not, in terms of correct config to use,etc.
 
+static bool call_identify_controller(DeviceProxy* _proxy)
+{
+	char* manufacturer, product, serialNumber;
+	USBString* s;
+	if (descriptor.iManufacturer) {
+		s = get_manufacturer_string();
+		if (s) {
+			manufacturer = s->get_ascii();
+		}
+	}
+	if (descriptor.iProduct) {
+		s = get_product_string();
+		if (s) {
+			product = s->get_ascii();
+		}
+	}
+	if (descriptor.iSerialNumber) {
+		s = get_serial_string();
+		if (s) {
+			serialNumber = s->get_ascii();
+		}
+	}
+
+	return proxy->identify_controller(manufacturer, product, serialNumber);
+}
+
 Device::Device(DeviceProxy* _proxy) {
 	hostConfigurationIndex=-1;
 	hostAddress=-1;
@@ -70,7 +96,8 @@ Device::Device(DeviceProxy* _proxy) {
 					if ( configurations[i]->get_interface_alternate(j,k)->get_descriptor()) {
 						__u8 iInterface=configurations[i]->get_interface_alternate(j,k)->get_descriptor()->iInterface;
 						if (iInterface) {
-							add_string(iInterface);
+							if (!call_identify_controller(_proxy))
+								add_string(iInterface);
 						}
 					}
 				}

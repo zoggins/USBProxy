@@ -12,7 +12,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <signal.h>
-#include "DeviceProxy_Xbox.h"
+#include "DeviceProxy_Xbox360.h"
 #include "TRACE.h"
 #include "HexString.h"
 
@@ -24,7 +24,7 @@ using namespace std;
 
 int resetCount = 1;
 
-static DeviceProxy_Xbox *proxy;
+static DeviceProxy_Xbox360 *proxy;
 
 extern "C" {
 	// for handling events of hotploug.
@@ -36,7 +36,7 @@ extern "C" {
 	}
 
 	DeviceProxy * get_deviceproxy_plugin(ConfigParser *cfg) {
-		proxy = new DeviceProxy_Xbox(cfg);
+		proxy = new DeviceProxy_Xbox360(cfg);
 		return (DeviceProxy *)proxy;
 	}
 
@@ -45,9 +45,17 @@ extern "C" {
 	}
 }
 
+static bool isSN30Pro()
+{
+	return manufacturer != NULL && strcmp(manufacturer, "Controller") == 0
+		&& product != NULL && strcmp(product, "Controller") == 0
+		&& serialNumber != NULL && strcmp(serialNumber, "Controller") == 0;
+		
+}
+
 //CLEANUP hotplug support
 
-DeviceProxy_Xbox::DeviceProxy_Xbox(int vendorId, int productId, bool includeHubs) {
+DeviceProxy_Xbox360::DeviceProxy_Xbox360(int vendorId, int productId, bool includeHubs) {
 	context = NULL;
 	dev_handle = NULL;
 
@@ -65,9 +73,13 @@ DeviceProxy_Xbox::DeviceProxy_Xbox(int vendorId, int productId, bool includeHubs
 		epInterfaces[i].defined = false;
 		epInterfaces[i].claimed = false;
 	}
+
+	manufacturer = NULL;
+	product = NULL;
+	serialNumber = NULL;
 }
 
-DeviceProxy_Xbox::DeviceProxy_Xbox(ConfigParser *cfg) :
+DeviceProxy_Xbox360::DeviceProxy_Xbox360(ConfigParser *cfg) :
 	DeviceProxy(*cfg) {
 	int vendorId, productId;
 
@@ -104,9 +116,13 @@ DeviceProxy_Xbox::DeviceProxy_Xbox(ConfigParser *cfg) :
 		epInterfaces[i].defined = false;
 		epInterfaces[i].claimed = false;
 	}
+
+	manufacturer = NULL;
+	product = NULL;
+	serialNumber = NULL;
 }
 
-DeviceProxy_Xbox::~DeviceProxy_Xbox() {
+DeviceProxy_Xbox360::~DeviceProxy_Xbox360() {
 	// for handling events of hotploug.
 	if (context && callback_handle != -1) {
 		libusb_hotplug_deregister_callback(context, callback_handle);
@@ -118,13 +134,17 @@ DeviceProxy_Xbox::~DeviceProxy_Xbox() {
 	if (privateContext && context) {
 		libusb_exit(context);
 	}
+
+	free(manufacturer);
+	free(product);
+	free(serialNumber);
 }
 
-int DeviceProxy_Xbox::connect(int timeout) {
+int DeviceProxy_Xbox360::connect(int timeout) {
 	return connect(desired_vid, desired_pid, desired_hubs);
 }
 
-int DeviceProxy_Xbox::connect(libusb_device* dvc, libusb_context* _context) {
+int DeviceProxy_Xbox360::connect(libusb_device* dvc, libusb_context* _context) {
 	if (dev_handle) {
 		cerr << "LibUSB already connected." << endl;
 		return 0;
@@ -147,7 +167,7 @@ int DeviceProxy_Xbox::connect(libusb_device* dvc, libusb_context* _context) {
 	return 0;
 }
 
-int DeviceProxy_Xbox::connect(libusb_device_handle* devh, libusb_context* _context) {
+int DeviceProxy_Xbox360::connect(libusb_device_handle* devh, libusb_context* _context) {
 	if (dev_handle) {
 		cerr << "LibUSB already connected." << endl;
 		return 0;
@@ -164,7 +184,7 @@ int DeviceProxy_Xbox::connect(libusb_device_handle* devh, libusb_context* _conte
 	return 0;
 }
 
-int DeviceProxy_Xbox::connect(int vendorId, int productId, bool includeHubs) {
+int DeviceProxy_Xbox360::connect(int vendorId, int productId, bool includeHubs) {
 	if (dev_handle) {
 		cerr << "LibUSB already connected." << endl;
 		return 0;
@@ -268,7 +288,7 @@ int DeviceProxy_Xbox::connect(int vendorId, int productId, bool includeHubs) {
 	return 0;
 }
 
-void DeviceProxy_Xbox::disconnect() {
+void DeviceProxy_Xbox360::disconnect() {
 	// for handling events of hotploug.
 	if (context && callback_handle != -1) {
 		libusb_hotplug_deregister_callback(context, callback_handle);
@@ -285,7 +305,7 @@ void DeviceProxy_Xbox::disconnect() {
 	context = NULL;
 }
 
-void DeviceProxy_Xbox::reset() {
+void DeviceProxy_Xbox360::reset() {
 	int rc = libusb_reset_device(dev_handle);
 	if (rc == LIBUSB_ERROR_NOT_FOUND) {
 		disconnect();
@@ -296,7 +316,7 @@ void DeviceProxy_Xbox::reset() {
 	}
 }
 
-bool DeviceProxy_Xbox::is_connected() {
+bool DeviceProxy_Xbox360::is_connected() {
 	if (dev_handle) {
 		return true;
 	}
@@ -305,13 +325,13 @@ bool DeviceProxy_Xbox::is_connected() {
 	}
 }
 
-bool DeviceProxy_Xbox::is_highspeed() {
+bool DeviceProxy_Xbox360::is_highspeed() {
 	libusb_device* dvc = libusb_get_device(dev_handle);
 	int speed = libusb_get_device_speed(dvc);
 	return (speed == LIBUSB_SPEED_HIGH) || (speed == LIBUSB_SPEED_SUPER);
 }
 
-char* DeviceProxy_Xbox::toString() {
+char* DeviceProxy_Xbox360::toString() {
 	unsigned char str_mfr[128] = "N/A";
 	unsigned char str_prd[128] = "N/A";
 	struct libusb_device_descriptor desc;
@@ -345,7 +365,7 @@ char* DeviceProxy_Xbox::toString() {
 	return strdup(ss.str().c_str());
 }
 
-int DeviceProxy_Xbox::control_request(const usb_ctrlrequest *setup_packet, int *nbytes, unsigned char * dataptr,
+int DeviceProxy_Xbox360::control_request(const usb_ctrlrequest *setup_packet, int *nbytes, unsigned char * dataptr,
 	int timeout) {
 
 	timeout = control_request_timeout_override(timeout);
@@ -376,12 +396,12 @@ int DeviceProxy_Xbox::control_request(const usb_ctrlrequest *setup_packet, int *
 	return 0;
 }
 
-uint8_t DeviceProxy_Xbox::get_address() {
+uint8_t DeviceProxy_Xbox360::get_address() {
 	libusb_device* dvc = libusb_get_device(dev_handle);
 	return libusb_get_device_address(dvc);
 }
 
-bool DeviceProxy_Xbox::endpoint_interface_claimed(uint8_t endpoint) {
+bool DeviceProxy_Xbox360::endpoint_interface_claimed(uint8_t endpoint) {
 
 	if (!epInterfaces[endpoint & 0x0F].defined) {
 		cerr << "No interface defined for endpoint: " << hex2(endpoint) << endl;
@@ -395,7 +415,7 @@ bool DeviceProxy_Xbox::endpoint_interface_claimed(uint8_t endpoint) {
 	return true;
 }
 
-void DeviceProxy_Xbox::send_data(uint8_t endpoint, uint8_t attributes, uint16_t maxPacketSize, uint8_t* dataptr,
+void DeviceProxy_Xbox360::send_data(uint8_t endpoint, uint8_t attributes, uint16_t maxPacketSize, uint8_t* dataptr,
 	int length) {
 
 	if (!endpoint_interface_claimed(endpoint)) {
@@ -444,7 +464,7 @@ void DeviceProxy_Xbox::send_data(uint8_t endpoint, uint8_t attributes, uint16_t 
 		<< libusb_strerror((libusb_error)rc) << endl;
 }
 
-void DeviceProxy_Xbox::receive_data(uint8_t endpoint, uint8_t attributes, uint16_t maxPacketSize, uint8_t ** dataptr,
+void DeviceProxy_Xbox360::receive_data(uint8_t endpoint, uint8_t attributes, uint16_t maxPacketSize, uint8_t ** dataptr,
 	int* length, int timeout) {
 
 	if (!endpoint_interface_claimed(endpoint)) {
@@ -452,6 +472,9 @@ void DeviceProxy_Xbox::receive_data(uint8_t endpoint, uint8_t attributes, uint16
 		return;
 	}
 
+	if (isSN30Pro() && endpoint == 0x83)
+		return;
+		
 	int rc = LIBUSB_SUCCESS;
 
 	//if (timeout < 10)
@@ -502,12 +525,12 @@ void DeviceProxy_Xbox::receive_data(uint8_t endpoint, uint8_t attributes, uint16
 		<< libusb_strerror((libusb_error)rc) << endl;
 }
 
-void DeviceProxy_Xbox::set_endpoint_interface(uint8_t endpoint, uint8_t interface) {
+void DeviceProxy_Xbox360::set_endpoint_interface(uint8_t endpoint, uint8_t interface) {
 	epInterfaces[endpoint & 0x0F].defined = true;
 	epInterfaces[endpoint & 0x0F].interface = interface;
 }
 
-void DeviceProxy_Xbox::claim_interface(uint8_t interface) {
+void DeviceProxy_Xbox360::claim_interface(uint8_t interface) {
 	if (is_connected()) {
 		int rc = libusb_claim_interface(dev_handle, interface);
 		if (rc != LIBUSB_SUCCESS) {
@@ -524,7 +547,7 @@ void DeviceProxy_Xbox::claim_interface(uint8_t interface) {
 	}
 }
 
-void DeviceProxy_Xbox::release_interface(uint8_t interface) {
+void DeviceProxy_Xbox360::release_interface(uint8_t interface) {
 	if (is_connected()) {
 		int rc = libusb_release_interface(dev_handle, interface);
 		if (rc != LIBUSB_SUCCESS && rc != LIBUSB_ERROR_NOT_FOUND) {
@@ -541,22 +564,30 @@ void DeviceProxy_Xbox::release_interface(uint8_t interface) {
 	}
 }
 
-int DeviceProxy_Xbox::control_request_timeout_override(int timeout)
+int DeviceProxy_Xbox360::control_request_timeout_override(int timeout)
 {
-	return 10;
+	return timeout;
 }
 
-bool DeviceProxy_Xbox::swallow_setup_packet_send_error(const usb_ctrlrequest* setup_packet)
-{
-	return setup_packet->wValue == 768;
-}
-
-int DeviceProxy_Xbox::check_device_response(libusb_device_handle* dev_handle)
-{
-	return 0;
-}
-
-bool DeviceProxy_Xbox::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+bool DevicePrDeviceProxy_Xbox360oxy_LibUSB::swallow_setup_packet_send_error(const usb_ctrlrequest* setup_packet)
 {
 	return false;
+}
+
+int DeviceProxy_Xbox360::check_device_response(libusb_device_handle* dev_handle)
+{
+	unsigned char unused[4];
+	return libusb_get_string_descriptor(dev_handle, 0, 0, unused, sizeof(unused));
+}
+
+bool DeviceProxy_Xbox360::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	if (this->manufacturer == NULL)	
+		this->manufacturer = manufacturer;
+	if (this->product == NULL)
+		this->product = product;	
+	if (this->serialNumber == NULL)
+		this->serialNumber = serialNumber;
+
+	return isSN30Pro();
 }
