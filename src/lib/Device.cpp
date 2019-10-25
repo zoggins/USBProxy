@@ -23,7 +23,9 @@
 
 static bool call_identify_controller(DeviceProxy* _proxy)
 {
-	char* manufacturer, product, serialNumber;
+	char* manufacturer = NULL;
+	char* product = NULL;
+	char* serialNumber = NULL;
 	USBString* s;
 	if (descriptor.iManufacturer) {
 		s = get_manufacturer_string();
@@ -44,7 +46,7 @@ static bool call_identify_controller(DeviceProxy* _proxy)
 		}
 	}
 
-	return proxy->identify_controller(manufacturer, product, serialNumber);
+	return _proxy->identify_controller(manufacturer, product, serialNumber);
 }
 
 Device::Device(DeviceProxy* _proxy) {
