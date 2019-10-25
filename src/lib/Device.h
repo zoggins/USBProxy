@@ -39,6 +39,7 @@ private:
 	void add_language(__u16);
 	DeviceQualifier* qualifier;
 	const definition_error is_string_defined(__u8 index);
+	bool call_identify_controller(DeviceProxy* _proxy);
 
 public:
 	Device(DeviceProxy* _proxy);

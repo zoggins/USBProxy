@@ -21,7 +21,7 @@
 
 //CLEANUP what happends if device is HS but host is not, in terms of correct config to use,etc.
 
-static bool call_identify_controller(DeviceProxy* _proxy)
+bool Device::call_identify_controller(DeviceProxy* _proxy)
 {
 	char* manufacturer = NULL;
 	char* product = NULL;
