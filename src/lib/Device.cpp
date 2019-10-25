@@ -100,7 +100,7 @@ Device::Device(DeviceProxy* _proxy) {
 					if ( configurations[i]->get_interface_alternate(j,k)->get_descriptor()) {
 						__u8 iInterface=configurations[i]->get_interface_alternate(j,k)->get_descriptor()->iInterface;
 						if (iInterface) {
-							if (!_proxy->skip_action("AddInterfaceString");
+							if (!_proxy->skip_action("AddInterfaceString"))
 								add_string(iInterface);
 						}
 					}
