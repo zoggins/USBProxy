@@ -10,7 +10,7 @@ PacketFilter_PS3::PacketFilter_PS3(ConfigParser *cfg) {
 }
 
 void PacketFilter_PS3::filter_packet(Packet* packet) {
-	if (packet->wLength == 49 && packet->bEndPoint == 0x81) {
+	if (packet->wLength == 49 && packet->bEndpoint == 0x81) {
 		
 		// digital buttons
 		for (int j = 2; j < 5; ++j)
