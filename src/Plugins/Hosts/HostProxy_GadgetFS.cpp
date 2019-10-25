@@ -372,7 +372,7 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 	}
 
 	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
-	aio = *p_epin_async[number];
+	*aio = *p_epin_async[number];
 	aio->aio_sigevent.sigev_value.sival_ptr = aio
 
 	/*pthread_mutex_lock(&lock);
