@@ -25,6 +25,7 @@ pthread_mutex_t HostProxy_GadgetFS::lock;
 
 void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 {
+	printf("here\n");
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
 	//pthread_mutex_lock(&lock);
