@@ -28,14 +28,14 @@ void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 	printf("here\n");
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	pthread_mutex_lock(&lock);
-	if (aio->aio_buf != NULL)
-	{
+	//pthread_mutex_lock(&lock);
+	//if (aio->aio_buf != NULL)
+	//{
 		free((void*)aio->aio_buf);
-		aio->aio_buf = NULL;
-	}
-	pthread_mutex_unlock(&lock);
-
+		//aio->aio_buf = NULL;
+		free((void*)aio);
+	//}
+	//pthread_mutex_unlock(&lock);
 }
 
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
@@ -371,15 +371,16 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 		return;
 	}
 
-	aiocb* aio=p_epin_async[number];
+	aiocb* aio = (aiocb*)malloc((sizeof(aiocd));
+	*aio = *p_epin_async[number];
 
-	pthread_mutex_lock(&lock);
-	if (aio->aio_buf != NULL)
-	{
-		free((void*)aio->aio_buf);
-		aio->aio_buf = NULL;
-	}
-	pthread_mutex_unlock(&lock);
+	//pthread_mutex_lock(&lock);
+	//if (aio->aio_buf != NULL)
+	//{
+	//	free((void*)aio->aio_buf);
+	//	aio->aio_buf = NULL;
+	//}
+	//pthread_mutex_unlock(&lock);
 
 
 	aio->aio_buf=malloc(length);
