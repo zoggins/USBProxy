@@ -423,9 +423,9 @@ static int dot11_stringMaxIndex;
 
 void DeviceProxy_dot11::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
 {
-	free(manufacturer);
-	free(product);
-	free(serialNumber);
+	free((void*)manufacturer);
+	free((void*)product);
+	free((void*)serialNumber);
 }
 
 bool DeviceProxy_dot11::skip_action(const char* action)

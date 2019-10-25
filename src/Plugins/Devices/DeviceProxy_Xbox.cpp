@@ -558,9 +558,9 @@ int DeviceProxy_Xbox::check_device_response(libusb_device_handle* dev_handle)
 
 void DeviceProxy_Xbox::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
 {
-	free(manufacturer);
-	free(product);
-	free(serialNumber);
+	free((void*)manufacturer);
+	free((void*)product);
+	free((void*)serialNumber);
 }
 
 bool DeviceProxy_Xbox::skip_action(const char* action)

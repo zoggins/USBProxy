@@ -149,9 +149,9 @@ extern "C" {
 
 void DeviceProxy_TCP::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
 {
-	free(manufacturer);
-	free(product);
-	free(serialNumber);
+	free((void*)manufacturer);
+	free((void*)product);
+	free((void*)serialNumber);
 }
 
 bool DeviceProxy_TCP::skip_action(const char* action)

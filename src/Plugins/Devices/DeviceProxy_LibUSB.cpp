@@ -559,9 +559,9 @@ int DeviceProxy_LibUSB::check_device_response(libusb_device_handle* dev_handle)
 
 void DeviceProxy_LibUSB::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
 {
-	free(manufacturer);
-	free(product);
-	free(serialNumber);
+	free((void*)manufacturer);
+	free((void*)product);
+	free((void*)serialNumber);
 }
 
 bool DeviceProxy_LibUSB::skip_action(const char* action)
