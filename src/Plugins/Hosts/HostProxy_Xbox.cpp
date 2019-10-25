@@ -23,7 +23,7 @@
 
 pthread_mutex_t HostProxy_GadgetFS::lock;
 
-void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
+void HostProxy_Xbox::aio_send_completion_handler(sigval_t sigval)
 {
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
