@@ -143,7 +143,14 @@ extern "C" {
 	}
 }
 
-bool DeviceProxy_Callback::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+void DeviceProxy_Callback::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	free(manufacturer);
+	free(product);
+	free(serialNumber);
+}
+
+bool DeviceProxy_Callback::skip_action(const char* action)
 {
 	return false;
 }

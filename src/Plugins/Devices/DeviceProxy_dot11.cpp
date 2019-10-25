@@ -421,7 +421,14 @@ static int dot11_stringMaxIndex;
 	}
 }
 
-bool DeviceProxy_dot11::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+void DeviceProxy_dot11::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	free(manufacturer);
+	free(product);
+	free(serialNumber);
+}
+
+bool DeviceProxy_dot11::skip_action(const char* action)
 {
 	return false;
 }

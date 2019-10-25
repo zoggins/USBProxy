@@ -21,20 +21,12 @@
 #include "Interface.h"
 #include "Endpoint.h"
 
-pthread_mutex_t HostProxy_PS3::lock;
-
 void HostProxy_PS3::aio_send_completion_handler(sigval_t sigval)
 {
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	pthread_mutex_lock(&lock);
-	if (aio->aio_buf != NULL)
-	{
-		free((void*)aio->aio_buf);
-		aio->aio_buf = NULL;
-	}
-	pthread_mutex_unlock(&lock);
-
+	free((void*)aio->aio_buf);
+	free((void*)aio);
 }
 
 HostProxy_PS3::HostProxy_PS3(ConfigParser *cfg)
@@ -195,12 +187,6 @@ int HostProxy_PS3::connect(Device* device,int timeout) {
 		free(hex);
 	}
 
-	if (pthread_mutex_init(&lock, NULL) != 0)
-	{
-		fprintf(stderr, "mutex init has failed\n");
-		return 1;
-	}
-
 	device_filename = find_gadget_filename();
 	p_device_file = open_gadget(device_filename);
 	if (p_device_file < 0) {
@@ -279,8 +265,6 @@ void HostProxy_PS3::disconnect() {
 			p_epout_async[i]=NULL;
 		}
 	}
-
-	pthread_mutex_destroy(&lock);
 
 	unmount_gadget();
 	
@@ -406,15 +390,9 @@ void HostProxy_PS3::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacketSize,
 		return;
 	}
 
-	aiocb* aio=p_epin_async[number];
-
-	pthread_mutex_lock(&lock);
-	if (aio->aio_buf != NULL)
-	{
-		free((void*)aio->aio_buf);
-		aio->aio_buf = NULL;
-	}
-	pthread_mutex_unlock(&lock);
+	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
+	*aio = *p_epin_async[number];
+	aio->aio_sigevent.sigev_value.sival_ptr = aio;
 
 	aio->aio_buf=malloc(length);
 	memcpy((void*)(aio->aio_buf),dataptr,length);

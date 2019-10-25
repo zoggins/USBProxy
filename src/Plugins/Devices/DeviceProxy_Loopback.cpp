@@ -360,7 +360,14 @@ extern "C" {
 	}
 }
 
-bool DeviceProxy_Loopback::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+void DeviceProxy_Loopback::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	free(manufacturer);
+	free(product);
+	free(serialNumber);
+}
+
+bool DeviceProxy_Loopback::skip_action(const char* action)
 {
 	return false;
 }

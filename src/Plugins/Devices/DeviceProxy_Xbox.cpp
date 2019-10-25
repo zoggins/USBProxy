@@ -556,7 +556,14 @@ int DeviceProxy_Xbox::check_device_response(libusb_device_handle* dev_handle)
 	return 0;
 }
 
-bool DeviceProxy_Xbox::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+void DeviceProxy_Xbox::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	free(manufacturer);
+	free(product);
+	free(serialNumber);
+}
+
+bool DeviceProxy_Xbox::skip_action(const char* action)
 {
 	return false;
 }

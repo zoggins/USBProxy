@@ -557,7 +557,14 @@ int DeviceProxy_LibUSB::check_device_response(libusb_device_handle* dev_handle)
 	return libusb_get_string_descriptor(dev_handle, 0, 0, unused, sizeof(unused));
 }
 
-bool DeviceProxy_LibUSB::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+void DeviceProxy_LibUSB::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	free(manufacturer);
+	free(product);
+	free(serialNumber);
+}
+
+bool DeviceProxy_LibUSB::skip_action(const char* action)
 {
 	return false;
 }

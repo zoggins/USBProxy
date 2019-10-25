@@ -15,7 +15,6 @@ extern "C" {
 #include "errno.h"
 #include "aio.h"
 #include <linux/usb/ch9.h>
-#include <pthread.h>
 
 class HostProxy_PS3: public HostProxy {
 private:
@@ -33,7 +32,7 @@ private:
 	int generate_descriptor(Device* device);
 
 	usb_ctrlrequest lastControl;
-	static pthread_mutex_t lock;
+
 	static void aio_send_completion_handler(sigval_t sigval);
 
 protected:

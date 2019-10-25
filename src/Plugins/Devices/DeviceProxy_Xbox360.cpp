@@ -580,7 +580,7 @@ int DeviceProxy_Xbox360::check_device_response(libusb_device_handle* dev_handle)
 	return libusb_get_string_descriptor(dev_handle, 0, 0, unused, sizeof(unused));
 }
 
-bool DeviceProxy_Xbox360::identify_controller(const char* manufacturer, const char* product, const char* serialNumber)
+void DeviceProxy_Xbox360::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
 {
 	if (this->manufacturer == NULL)	
 		this->manufacturer = manufacturer;
@@ -588,6 +588,10 @@ bool DeviceProxy_Xbox360::identify_controller(const char* manufacturer, const ch
 		this->product = product;	
 	if (this->serialNumber == NULL)
 		this->serialNumber = serialNumber;
+}
 
-	return isSN30Pro();
+bool DeviceProxy_Xbox360::skip_action(const char* action)
+{
+	if (strcmp(action, "AddInterfaceString") == 0)
+		return isSN30Pro();
 }
