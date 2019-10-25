@@ -21,12 +21,20 @@
 #include "Interface.h"
 #include "Endpoint.h"
 
-static void aio_send_completion_handler(sigval_t sigval)
+pthread_mutex_t HostProxy_GadgetFS::lock;
+
+void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 {
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	free((void*)aio->aio_buf);
-	aio->aio_buf = NULL;
+	pthread_mutex_lock(&lock);
+	if (aio->aio_buf != NULL)
+	{
+		free((void*)aio->aio_buf);
+		aio->aio_buf = NULL;
+	}
+	pthread_mutex_unlock(&lock);
+
 }
 
 HostProxy_Xbox::HostProxy_Xbox(ConfigParser *cfg)
@@ -153,6 +161,12 @@ int HostProxy_Xbox::connect(Device* device,int timeout) {
 		free(hex);
 	}
 
+	if (pthread_mutex_init(&lock, NULL) != 0)
+	{
+		fprintf(stderr, "mutex init has failed\n");
+		return 1;
+	}
+
 	device_filename = find_gadget_filename();
 	p_device_file = open_gadget(device_filename);
 	if (p_device_file < 0) {
@@ -229,6 +243,8 @@ void HostProxy_Xbox::disconnect() {
 			p_epout_async[i]=NULL;
 		}
 	}
+
+	pthread_mutex_destroy(&lock);
 
 	unmount_gadget();
 	
@@ -356,11 +372,13 @@ void HostProxy_Xbox::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacketSize
 
 	aiocb* aio=p_epin_async[number];
 
+	pthread_mutex_lock(&lock);
 	if (aio->aio_buf != NULL)
 	{
 		free((void*)aio->aio_buf);
 		aio->aio_buf = NULL;
 	}
+	pthread_mutex_unlock(&lock);
 
 	aio->aio_buf=malloc(length);
 	memcpy((void*)(aio->aio_buf),dataptr,length);

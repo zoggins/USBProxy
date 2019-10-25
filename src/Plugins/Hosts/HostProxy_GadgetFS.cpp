@@ -21,12 +21,20 @@
 #include "Interface.h"
 #include "Endpoint.h"
 
-static void aio_send_completion_handler(sigval_t sigval)
+pthread_mutex_t HostProxy_GadgetFS::lock;
+
+void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 {
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	free((void*)aio->aio_buf);
-	aio->aio_buf = NULL;
+	pthread_mutex_lock(&lock);
+	if (aio->aio_buf != NULL)
+	{
+		free((void*)aio->aio_buf);
+		aio->aio_buf = NULL;
+	}
+	pthread_mutex_unlock(&lock);
+
 }
 
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
@@ -153,6 +161,12 @@ int HostProxy_GadgetFS::connect(Device* device,int timeout) {
 		free(hex);
 	}
 
+	if (pthread_mutex_init(&lock, NULL) != 0)
+	{
+		fprintf(stderr, "mutex init has failed\n");
+		return 1;
+	}
+
 	device_filename = find_gadget_filename();
 	p_device_file = open_gadget(device_filename);
 	if (p_device_file < 0) {
@@ -232,6 +246,8 @@ void HostProxy_GadgetFS::disconnect() {
 
 	unmount_gadget();
 	
+	pthread_mutex_destroy(&lock);
+
 	p_is_connected = false;
 }
 
@@ -356,11 +372,14 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 
 	aiocb* aio=p_epin_async[number];
 
+	pthread_mutex_lock(&lock);
 	if (aio->aio_buf != NULL)
 	{
 		free((void*)aio->aio_buf);
 		aio->aio_buf = NULL;
 	}
+	pthread_mutex_unlock(&lock);
+
 
 	aio->aio_buf=malloc(length);
 	memcpy((void*)(aio->aio_buf),dataptr,length);
