@@ -37,6 +37,7 @@ private:
 	} epInterfaces[0x10];
 
 	bool endpoint_interface_claimed(uint8_t endpoint);
+	bool isSN30Pro();
 
 protected:
 	virtual int control_request_timeout_override(int timeout);

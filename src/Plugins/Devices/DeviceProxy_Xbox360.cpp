@@ -45,7 +45,7 @@ extern "C" {
 	}
 }
 
-static bool isSN30Pro()
+bool DeviceProxy_Xbox360::isSN30Pro()
 {
 	return manufacturer != NULL && strcmp(manufacturer, "Controller") == 0
 		&& product != NULL && strcmp(product, "Controller") == 0
