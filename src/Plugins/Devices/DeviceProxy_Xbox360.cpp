@@ -594,4 +594,6 @@ bool DeviceProxy_Xbox360::skip_action(const char* action)
 {
 	if (strcmp(action, "AddInterfaceString") == 0)
 		return isSN30Pro();
+
+	return false;
 }
