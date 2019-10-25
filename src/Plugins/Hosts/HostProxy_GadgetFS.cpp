@@ -371,7 +371,7 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 		return;
 	}
 
-	aiocb* aio = (aiocb*)malloc(sizeof(aiocd));
+	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
 	*aio = *p_epin_async[number];
 
 	//pthread_mutex_lock(&lock);
