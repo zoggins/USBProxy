@@ -21,7 +21,7 @@
 #include "Interface.h"
 #include "Endpoint.h"
 
-pthread_mutex_t HostProxy_GadgetFS::lock;
+pthread_mutex_t HostProxy_PS3::lock;
 
 void HostProxy_PS3::aio_send_completion_handler(sigval_t sigval)
 {
