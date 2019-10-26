@@ -177,6 +177,8 @@ extern "C" int main(int argc, char **argv)
 		case 'z':
 			cfg->add_to_vector("Plugins", "PacketFilter_Switch");
 			cfg->add_pointer("PacketFilter_Switch::file", stdout);
+			cfg->set("HostProxy", "HostProxy_Switch");
+			host_set = true;
 			break;
 		case 'b':
 			cfg->add_to_vector("Plugins", "PacketFilter_Xbox360");
