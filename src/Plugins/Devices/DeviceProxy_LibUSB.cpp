@@ -22,6 +22,10 @@ using namespace std;
 #define hex4(VALUE) setfill('0') << setw(4) << hex << VALUE << dec
 #define MAX_ATTEMPTS 5
 
+extern "C" {
+	int hotplug_callback(struct libusb_context *ctx, struct libusb_device *dev, libusb_hotplug_event envet, void *user_data);
+}
+
 //CLEANUP hotplug support
 
 DeviceProxy_LibUSB::DeviceProxy_LibUSB(int vendorId, int productId, bool includeHubs) {
