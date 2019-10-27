@@ -39,6 +39,8 @@ private:
 protected:
 
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
+	virtual bool do_not_send(__u8 endpoint, int* length);
+	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength);
 
 public:
 	HostProxy_GadgetFS(ConfigParser *cfg);

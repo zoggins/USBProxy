@@ -160,7 +160,7 @@ int HostProxy_GadgetFS::connect(Device* device,int timeout) {
 		return 1;
 	}
 
-	status = write(p_device_file, descriptor, descriptorLength);
+	status = send_descriptor(p_device_file, descriptor, descriptorLength);
 	if (status < 0) {
 		fprintf(stderr,"Fail on write %d %s\n",errno,strerror(errno));
 		close(p_device_file);
@@ -353,6 +353,9 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 		fprintf(stderr,"trying to send %d bytes on a non-open EP%02x\n",length,endpoint);
 		return;
 	}
+
+	if (do_not_send())
+		return;
 
 	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
 	*aio = *p_epin_async[number];
@@ -566,6 +569,16 @@ void HostProxy_GadgetFS::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,b
 void HostProxy_GadgetFS::handle_USB_REQ_SET_CONFIGURATION()
 {
 	control_ack();
+}
+
+bool HostProxy_GadgetFS::do_not_send(__u8 endpoint, int* length)
+{
+	return false;
+}
+
+int HostProxy_GadgetFS::send_descriptor(int p_device_file, char* descriptor, int descriptorLength)
+{
+	return write(p_device_file, descriptor, descriptorLength);
 }
 
 static HostProxy_GadgetFS *proxy;
