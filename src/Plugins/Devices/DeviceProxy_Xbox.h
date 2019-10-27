@@ -10,10 +10,10 @@
 class DeviceProxy_Xbox: public DeviceProxy_LibUSB {
 
 public:
-	DeviceProxy_LibUSB(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
+	DeviceProxy_Xbox(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
 						bool includeHubs = false);
-	DeviceProxy_LibUSB(ConfigParser *cfg);
-	virtual ~DeviceProxy_LibUSB() {};
+	DeviceProxy_Xbox(ConfigParser *cfg);
+	virtual ~DeviceProxy_Xbox() {};
 
 protected:
 	virtual int control_request_timeout_override(int timeout);
