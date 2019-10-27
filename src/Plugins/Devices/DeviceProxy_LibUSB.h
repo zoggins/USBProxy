@@ -38,6 +38,8 @@ protected:
 	virtual int control_request_timeout_override(int timeout);
 	virtual bool swallow_setup_packet_send_error(const usb_ctrlrequest* setup_packet);
 	virtual int check_device_response(libusb_device_handle* dev_handle);
+	virtual void set_identity(const char* manufacturer, const char* product, const char* serialNumber);
+	virtual bool skip_action(const char* action);
 
 public:
 	DeviceProxy_LibUSB(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
@@ -65,9 +67,6 @@ public:
 	void set_endpoint_interface(uint8_t endpoint, uint8_t interface);
 	void claim_interface(uint8_t interface);
 	void release_interface(uint8_t interface);
-
-	void set_identity(const char* manufacturer, const char* product, const char* serialNumber);
-	bool skip_action(const char* action);
 
 	uint8_t get_address();
 	char* toString();
