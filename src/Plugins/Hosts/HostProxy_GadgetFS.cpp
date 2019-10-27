@@ -580,16 +580,3 @@ int HostProxy_GadgetFS::send_descriptor(int p_device_file, char* descriptor, int
 {
 	return write(p_device_file, descriptor, descriptorLength);
 }
-
-static HostProxy_GadgetFS *proxy;
-
-extern "C" {
-	HostProxy * get_hostproxy_plugin(ConfigParser *cfg) {
-		proxy = new HostProxy_GadgetFS(cfg);
-		return (HostProxy *) proxy;
-	}
-	
-	void destroy_plugin() {
-		delete proxy;
-	}
-}
