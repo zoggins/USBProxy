@@ -13,7 +13,7 @@ class HostProxy_Switch: public HostProxy_GadgetFS {
 
 protected:
 
-	virtual bool do_not_send(__u8 endpoint, int* length)
+	virtual bool do_not_send(__u8 endpoint, int* length);
 
 public:
 	HostProxy_Switch(ConfigParser *cfg);
