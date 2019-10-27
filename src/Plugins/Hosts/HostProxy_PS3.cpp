@@ -23,7 +23,7 @@
 
 
 HostProxy_PS3::HostProxy_PS3(ConfigParser *cfg)
-	: HostProxy_GadgetFS(*cfg)
+	: HostProxy_GadgetFS(cfg)
 {
 
 }

@@ -22,7 +22,7 @@
 #include "Endpoint.h"
 
 HostProxy_Switch::HostProxy_Switch(ConfigParser *cfg)
-	: HostProxy_GadgetFS(*cfg)
+	: HostProxy_GadgetFS(cfg)
 {
 	roundNum = 0;
 }

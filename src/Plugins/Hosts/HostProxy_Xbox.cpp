@@ -23,7 +23,7 @@
 
 
 HostProxy_Xbox::HostProxy_Xbox(ConfigParser *cfg)
-	: HostProxy_GadgetFS(*cfg)
+	: HostProxy_GadgetFS(cfg)
 {
 }
 
