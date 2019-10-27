@@ -22,29 +22,6 @@ using namespace std;
 #define hex4(VALUE) setfill('0') << setw(4) << hex << VALUE << dec
 #define MAX_ATTEMPTS 5
 
-int resetCount = 1;
-
-static DeviceProxy_LibUSB *proxy;
-
-extern "C" {
-	// for handling events of hotploug.
-	int hotplug_callback(struct libusb_context *ctx, struct libusb_device *dev, libusb_hotplug_event envet,
-		void *user_data) {
-		sleep(1);
-		kill(0, SIGHUP);
-		return 0;
-	}
-
-	DeviceProxy * get_deviceproxy_plugin(ConfigParser *cfg) {
-		proxy = new DeviceProxy_LibUSB(cfg);
-		return (DeviceProxy *)proxy;
-	}
-
-	void destroy_plugin() {
-		delete proxy;
-	}
-}
-
 //CLEANUP hotplug support
 
 DeviceProxy_LibUSB::DeviceProxy_LibUSB(int vendorId, int productId, bool includeHubs) {
