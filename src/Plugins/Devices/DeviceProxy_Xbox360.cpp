@@ -45,15 +45,16 @@ bool DeviceProxy_Xbox360::isSN30Pro()
 		
 }
 
-DeviceProxy_Xbox360::DeviceProxy_Xbox360(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
-	bool includeHubs = false) : DeviceProxy_LibUSB(vendorId, productId, includeHubs) 
+DeviceProxy_Xbox360::DeviceProxy_Xbox360(int vendorId, int productId,bool includeHubs) 
+	: DeviceProxy_LibUSB(vendorId, productId, includeHubs) 
 {
 	manufacturer = NULL;
 	product = NULL;
 	serialNumber = NULL;
 }
 
-DeviceProxy_Xbox360::DeviceProxy_Xbox360(ConfigParser *cfg) : DeviceProxy_LibUSB(cfg)
+DeviceProxy_Xbox360::DeviceProxy_Xbox360(ConfigParser *cfg) 
+	: DeviceProxy_LibUSB(cfg)
 {
 	manufacturer = NULL;
 	product = NULL;

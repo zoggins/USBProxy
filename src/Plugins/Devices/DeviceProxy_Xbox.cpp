@@ -37,10 +37,11 @@ extern "C" {
 	}
 }
 
-DeviceProxy_Xbox::DeviceProxy_Xbox(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
-	bool includeHubs = false) : DeviceProxy_LibUSB(vendorId, productId, includeHubs) {}
+DeviceProxy_Xbox::DeviceProxy_Xbox(int vendorId, int productId, bool includeHubs) 
+	: DeviceProxy_LibUSB(vendorId, productId, includeHubs) {}
 
-DeviceProxy_Xbox::DeviceProxy_Xbox(ConfigParser *cfg) : DeviceProxy_LibUSB(cfg) {}
+DeviceProxy_Xbox::DeviceProxy_Xbox(ConfigParser *cfg) 
+	: DeviceProxy_LibUSB(cfg) {}
 
 int DeviceProxy_Xbox::control_request_timeout_override(int timeout)
 {
