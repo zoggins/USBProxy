@@ -1,8 +1,20 @@
 /*
  * This file is part of USBProxy.
  */
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <iomanip>
+#include <algorithm>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <signal.h>
 #include "DeviceProxy_Xbox.h"
-
+#include "TRACE.h"
+#include "HexString.h"
 
 static DeviceProxy_Xbox *proxy;
 
