@@ -354,7 +354,7 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 		return;
 	}
 
-	if (do_not_send())
+	if (do_not_send(endpoint, &length))
 		return;
 
 	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
