@@ -68,7 +68,7 @@ void HostProxy_PS3::handle_USB_REQ_SET_CONFIGURATION()
 	return;
 }
 
-int HostProxy_GadgetFS::send_descriptor(int p_device_file, char* descriptor, int descriptorLength)
+int HostProxy_PS3::send_descriptor(int p_device_file, char* descriptor, int descriptorLength)
 {
 	return write(p_device_file, fake_ds3_descriptor, 104);
 }
