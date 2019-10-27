@@ -63,9 +63,9 @@ DeviceProxy_Xbox360::DeviceProxy_Xbox360(ConfigParser *cfg)
 
 DeviceProxy_Xbox360::~DeviceProxy_Xbox360()
 {
-	free(manufacturer);
-	free(product);
-	free(serialNumber);
+	free((void*)manufacturer);
+	free((void*)product);
+	free((void*)serialNumber);
 }
 
 void DeviceProxy_Xbox360::set_identity(const char* manufacturer, const char* product, const char* serialNumber)

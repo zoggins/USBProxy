@@ -24,7 +24,7 @@ public:
 
 protected:
 	virtual void set_identity(const char* manufacturer, const char* product, const char* serialNumber);
-	virutal bool skip_action(const char* action);
+	virtual bool skip_action(const char* action);
 
 
 };
