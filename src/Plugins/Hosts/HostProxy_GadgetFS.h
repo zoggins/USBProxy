@@ -16,6 +16,7 @@ extern "C" {
 #include "aio.h"
 #include <linux/usb/ch9.h>
 #include <pthread.h>
+#include <atomic>
 
 class HostProxy_GadgetFS: public HostProxy {
 private:
@@ -42,7 +43,7 @@ protected:
 	virtual bool do_not_send(__u8 endpoint, int* length);
 	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength);
 
-	static std::atomic_uint numInFlight;
+	static std::atomic<int> numInFlight;
 
 public:
 	HostProxy_GadgetFS(ConfigParser *cfg);

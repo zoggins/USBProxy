@@ -21,15 +21,11 @@
 #include "Interface.h"
 #include "Endpoint.h"
 
-#include <atomic>
-
-using std::atomic_uint;
-
-atomic_uint HostProxy_GadgetFS::numInFlight = 0;
+std::atomic<int> HostProxy_GadgetFS::numInFlight;
 
 void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 {
-	--numInFlight;
+	numInFlight--;
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
 	free((void*)aio->aio_buf);
@@ -39,6 +35,7 @@ void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
 	: HostProxy(*cfg)
 {
+	numInFlight.store(0);
 	mount_gadget();
 	p_is_connected = false;
 	p_device_file=0;
@@ -379,7 +376,7 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 		if (debugLevel > 2)
 			std::cerr << "Submitted " << length << " bytes to gadgetfs EP" << std::hex << (unsigned)endpoint << std::dec << '\n';
 		p_epin_active[number]=true;
-		++numInFlight;
+		numInFlight++;
 	}
 }
 
