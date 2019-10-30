@@ -24,7 +24,10 @@
 HostProxy_Switch::HostProxy_Switch(ConfigParser *cfg)
 	: HostProxy_GadgetFS(cfg)
 {
+	rateLocked = false;
+	rateLimit = 1;
 	roundNum = 0;
+	lastNumInFlight = 0;
 }
 
 HostProxy_Switch::~HostProxy_Switch() {}
@@ -38,7 +41,24 @@ bool HostProxy_Switch::do_not_send(__u8 endpoint, int* length)
 	if (endpoint == 0x81)
 	{
 		roundNum++;
-		if (roundNum <= 100 || (roundNum % 4) == 0)
+		if (!rateLocked && (roundNum % 100) == 0)
+		{
+			if (numInFlight < 5)
+			{
+				rateLocked = true;
+			}
+			else if (lastNumInFlight > numInFlight)
+			{
+				rateLocked = true;
+			}
+			else if (lastNumInFlight == 0 || (lastNumInFlight < numInFlight))
+			{
+				lastNumInFlight = numInFlight;
+				++rateLimit;
+			}
+		}
+
+		if ((roundNum % rateLimit) == 0)
 		{
 			return false;
 		}

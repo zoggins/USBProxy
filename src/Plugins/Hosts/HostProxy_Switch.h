@@ -9,7 +9,12 @@
 
 class HostProxy_Switch: public HostProxy_GadgetFS {
 
+private:
+
+	int lastNumInFlight;
+	bool rateLocked;
 	int roundNum;
+	int rateLimit;
 
 protected:
 
