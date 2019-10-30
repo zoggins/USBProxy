@@ -42,6 +42,8 @@ protected:
 	virtual bool do_not_send(__u8 endpoint, int* length);
 	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength);
 
+	static std::atomic_uint numInFlight;
+
 public:
 	HostProxy_GadgetFS(ConfigParser *cfg);
 	virtual ~HostProxy_GadgetFS();
