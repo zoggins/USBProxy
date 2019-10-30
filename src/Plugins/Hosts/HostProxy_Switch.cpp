@@ -34,10 +34,15 @@ bool HostProxy_Switch::do_not_send(__u8 endpoint, int* length)
 	// Switch can't seem to handle high-speed transfers, which we convert
 	// everything to high speed because gadgetfs is weird.
 	// So here is a simple rate limiter that seems to work.
+
 	if (endpoint == 0x81)
 	{
 		roundNum++;
-		if (roundNum > 100 && (roundNum % 2) == 0)
+		if (roundNum <= 100 || (roundNum % 4) == 0)
+		{
+			return false;
+		}
+		else
 		{
 			*length = 0;
 			return true;
