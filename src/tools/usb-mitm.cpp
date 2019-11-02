@@ -41,7 +41,9 @@ void usage(char *arg) {
 	printf("\t-x RetroSpy Xbox mode\n");
 	printf("\t-y RetroSpy PlayStation Classic mode\n");
 	printf("\t-z RetroSpy Switch mode\n");
-	printf("\t-a RetroSpy Xbox 360 mode\n");
+	printf("\t-u RetroSpy PS3 mode\n");
+	printf("\t-b RetroSpy Xbox 360 mode\n");
+	printf("\t-g RetroSpy NeoGeo mode\n");
 	printf("\t-k Keylogger with ROT13 filter (for demo), specify optional filename to output to instead of stderr\n");
 	printf("\t-w <filename> Write to pcap file for viewing in Wireshark\n");
 	printf("\t-h Display this message\n");
@@ -94,7 +96,7 @@ extern "C" int main(int argc, char **argv)
 	
 	ConfigParser *cfg = new ConfigParser();
 
-	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzb")) != EOF) {
+	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgu")) != EOF) {
 		switch (opt) {
 		case 'v':
 			cfg->set("vendorId", optarg);
@@ -176,10 +178,26 @@ extern "C" int main(int argc, char **argv)
 		case 'z':
 			cfg->add_to_vector("Plugins", "PacketFilter_Switch");
 			cfg->add_pointer("PacketFilter_Switch::file", stdout);
+			cfg->set("HostProxy", "HostProxy_Switch");
+			host_set = true;
+			break;
+		case 'g':
+			cfg->add_to_vector("Plugins", "PacketFilter_NeoGeo");
+			cfg->add_pointer("PacketFilter_NeoGeo::file", stdout);
 			break;
 		case 'b':
 			cfg->add_to_vector("Plugins", "PacketFilter_Xbox360");
 			cfg->add_pointer("PacketFilter_Xbox360::file", stdout);
+			cfg->set("DeviceProxy", "DeviceProxy_Xbox360");
+			device_set = true;
+			break;
+		case 'u':
+			cfg->add_to_vector("Plugins", "PacketFilter_PS3");
+			cfg->add_pointer("PacketFilter_PS3::file", stdout);
+			cfg->set("DeviceProxy", "DeviceProxy_LibUSB");
+			device_set = true;
+			cfg->set("HostProxy", "HostProxy_PS3");
+			host_set = true;
 			break;
 		case 'h':
 		default:

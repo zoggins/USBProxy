@@ -21,9 +21,21 @@
 #include "Interface.h"
 #include "Endpoint.h"
 
+std::atomic<int> HostProxy_GadgetFS::numInFlight;
+
+void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
+{
+	numInFlight--;
+	struct aiocb* aio;
+	aio = (struct aiocb*)sigval.sival_ptr;
+	free((void*)aio->aio_buf);
+	free((void*)aio);
+}
+
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
 	: HostProxy(*cfg)
 {
+	numInFlight.store(0);
 	mount_gadget();
 	p_is_connected = false;
 	p_device_file=0;
@@ -112,7 +124,7 @@ int HostProxy_GadgetFS::generate_descriptor(Device* device) {
 
 				    // conversion is: newValue = log2(8*oldValue)+1
 				    int newValue = (log10(8*(epd->bInterval))/log10(2)) + 1;
-				    //fprintf(stderr,"old bInterval: %02X\ncalculated new bInterval: %02X\n",epd->bInterval,newValue);
+					fprintf(stderr, "[%02x]: old bInterval: %02X\n[%02x]: calculated new bInterval: %02X\n", epd->bEndpointAddress, epd->bInterval, epd->bEndpointAddress, newValue);
 				    memset(&epd->bInterval,newValue,1);
 				    pointer+= epd->bLength;
 				}
@@ -152,7 +164,7 @@ int HostProxy_GadgetFS::connect(Device* device,int timeout) {
 		return 1;
 	}
 
-	status = write(p_device_file, descriptor, descriptorLength);
+	status = send_descriptor(p_device_file, descriptor, descriptorLength);
 	if (status < 0) {
 		fprintf(stderr,"Fail on write %d %s\n",errno,strerror(errno));
 		close(p_device_file);
@@ -223,7 +235,7 @@ void HostProxy_GadgetFS::disconnect() {
 	}
 
 	unmount_gadget();
-	
+
 	p_is_connected = false;
 }
 
@@ -346,7 +358,13 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 		return;
 	}
 
-	aiocb* aio=p_epin_async[number];
+	if (do_not_send(endpoint, &length))
+		return;
+
+	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
+	*aio = *p_epin_async[number];
+	aio->aio_sigevent.sigev_value.sival_ptr = aio;
+
 	aio->aio_buf=malloc(length);
 	memcpy((void*)(aio->aio_buf),dataptr,length);
 	aio->aio_nbytes=length;
@@ -358,6 +376,7 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 		if (debugLevel > 2)
 			std::cerr << "Submitted " << length << " bytes to gadgetfs EP" << std::hex << (unsigned)endpoint << std::dec << '\n';
 		p_epin_active[number]=true;
+		numInFlight++;
 	}
 }
 
@@ -522,8 +541,12 @@ void HostProxy_GadgetFS::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,b
 				aiocb* aio=new aiocb;
 				std::memset(aio, 0, sizeof(struct aiocb));
 				aio->aio_fildes = fd;
+				aio->aio_sigevent.sigev_notify_attributes = NULL;
 				aio->aio_sigevent.sigev_notify = SIGEV_NONE;
+				aio->aio_sigevent.sigev_value.sival_ptr = aio;
 				if (epAddress & 0x80) {
+					aio->aio_sigevent.sigev_notify = SIGEV_THREAD;
+					aio->aio_sigevent.sigev_notify_function = aio_send_completion_handler;
 					p_epin_async[epAddress&0x0f]=aio;
 				} else {
 					if (hs) {
@@ -541,7 +564,7 @@ void HostProxy_GadgetFS::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,b
 						p_epout_async[epAddress&0x0f]=aio;
 					}
 				}
-				//fprintf(stderr,"Opened EP%02x\n",epAddress);
+				fprintf(stderr,"Opened EP%02x\n",epAddress);
 			}
 		}
 		// end
@@ -553,15 +576,12 @@ void HostProxy_GadgetFS::handle_USB_REQ_SET_CONFIGURATION()
 	control_ack();
 }
 
-static HostProxy_GadgetFS *proxy;
+bool HostProxy_GadgetFS::do_not_send(__u8 endpoint, int* length)
+{
+	return false;
+}
 
-extern "C" {
-	HostProxy * get_hostproxy_plugin(ConfigParser *cfg) {
-		proxy = new HostProxy_GadgetFS(cfg);
-		return (HostProxy *) proxy;
-	}
-	
-	void destroy_plugin() {
-		delete proxy;
-	}
+int HostProxy_GadgetFS::send_descriptor(int p_device_file, char* descriptor, int descriptorLength)
+{
+	return write(p_device_file, descriptor, descriptorLength);
 }

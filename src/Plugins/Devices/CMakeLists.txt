@@ -6,7 +6,7 @@ project(usbproxy_devices C)
 set(PACKAGE usbproxy_devices)
 
 set(CMAKE_C_FLAGS "$ENV{CFLAGS} -pthread -Wall")
-set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} $ENV{CPPFLAGS} -std=gnu++11 -pthread -pedantic -Wall -felide-constructors -fno-exceptions")
+set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} $ENV{CPPFLAGS} -std=gnu++11 -pthread -pedantic -Wall -felide-constructors -fno-exceptions -O3")
 
 include_directories(${libusbproxy_SOURCE_DIR})
 LIST(APPEND PLUGINS_LINK_LIBS USBProxy)
@@ -16,10 +16,35 @@ LIST(APPEND PLUGINS DeviceProxy_Loopback DeviceProxy_TCP DeviceProxy_Callback)
 find_package(USB1)
 
 if( ${LIBUSB_FOUND} )
-	LIST(APPEND PLUGINS DeviceProxy_LibUSB)
-	LIST(APPEND PLUGINS DeviceProxy_Xbox)
 	include_directories(${LIBUSB_INCLUDE_DIR})
 	LIST(APPEND PLUGINS_LINK_LIBS ${LIBUSB_LIBRARIES})
+
+	add_library(DeviceProxy_LibUSB SHARED DeviceProxy_LibUSB.cpp LibUSB_static.cpp)
+	set_source_files_properties(DeviceProxy_LibUSB.cpp PROPERTIES COMPILE_FLAGS  "${CMAKE_CPP_FLAGS}")
+	set_target_properties(DeviceProxy_LibUSB PROPERTIES PREFIX "")
+	target_link_libraries(DeviceProxy_LibUSB ${PLUGINS_LINK_LIBS})
+	install(TARGETS DeviceProxy_LibUSB
+        LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
+        COMPONENT sharedlibs
+        )
+
+	add_library(DeviceProxy_Xbox SHARED DeviceProxy_Xbox.cpp DeviceProxy_LibUSB.cpp)
+	set_source_files_properties(DeviceProxy_Xbox.cpp PROPERTIES COMPILE_FLAGS  "${CMAKE_CPP_FLAGS}")
+	set_target_properties(DeviceProxy_Xbox PROPERTIES PREFIX "")
+	target_link_libraries(DeviceProxy_Xbox ${PLUGINS_LINK_LIBS})
+	install(TARGETS DeviceProxy_Xbox
+        LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
+        COMPONENT sharedlibs
+        )
+
+	add_library(DeviceProxy_Xbox360 SHARED DeviceProxy_Xbox360.cpp DeviceProxy_LibUSB.cpp)
+	set_source_files_properties(DeviceProxy_Xbox360.cpp PROPERTIES COMPILE_FLAGS  "${CMAKE_CPP_FLAGS}")
+	set_target_properties(DeviceProxy_Xbox360 PROPERTIES PREFIX "")
+	target_link_libraries(DeviceProxy_Xbox ${PLUGINS_LINK_LIBS})
+	install(TARGETS DeviceProxy_Xbox360
+        LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
+        COMPONENT sharedlibs
+        )
 else( ${LIBUSB_FOUND} )
 	if( USE_LIBUSB1 AND NOT ${LIBUSB_FOUND} )
 		message( FATAL_ERROR

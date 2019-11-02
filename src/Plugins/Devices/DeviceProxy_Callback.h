@@ -66,6 +66,9 @@ public:
 	void claim_interface(__u8 interface);
 	void release_interface(__u8 interface);
 
+	void set_identity(const char* manufacturer, const char* product, const char* serialNumber);
+	bool skip_action(const char* action);
+
 	__u8 get_address();
 };
 
