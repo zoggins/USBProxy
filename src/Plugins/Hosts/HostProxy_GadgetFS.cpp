@@ -124,7 +124,7 @@ int HostProxy_GadgetFS::generate_descriptor(Device* device) {
 
 				    // conversion is: newValue = log2(8*oldValue)+1
 				    int newValue = (log10(8*(epd->bInterval))/log10(2)) + 1;
-					fprintf(stderr, "[%02x]: old bInterval: %02X\n[%02x]: calculated new bInterval: %02X\n", epd->bEndpointAddress, epd->bInterval, newValue, epd->bEndpointAddress);
+					fprintf(stderr, "[%02x]: old bInterval: %02X\n[%02x]: calculated new bInterval: %02X\n", epd->bEndpointAddress, epd->bInterval, epd->bEndpointAddress, newValue);
 				    memset(&epd->bInterval,newValue,1);
 				    pointer+= epd->bLength;
 				}
