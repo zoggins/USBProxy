@@ -27,6 +27,13 @@ public:
 	virtual __u8 get_address() {return 0;}
 	virtual const char* toString() {return (char*)"Null Device";}
 
+	void set_identity(const char* manufacturer, const char* product, const char* serialNumber) 
+	{
+		free((void*)manufacturer);
+		free((void*)product);
+		free((void*)serialNumber); 
+	}
+	bool skip_action(const char* action) { return false; }
 };
 
 #endif /* USBPROXY_DEVICEPROXYNULL_H */

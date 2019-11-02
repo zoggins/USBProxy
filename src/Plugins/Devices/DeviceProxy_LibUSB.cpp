@@ -22,27 +22,8 @@ using namespace std;
 #define hex4(VALUE) setfill('0') << setw(4) << hex << VALUE << dec
 #define MAX_ATTEMPTS 5
 
-int resetCount = 1;
-
-static DeviceProxy_LibUSB *proxy;
-
 extern "C" {
-	// for handling events of hotploug.
-	int hotplug_callback(struct libusb_context *ctx, struct libusb_device *dev, libusb_hotplug_event envet,
-		void *user_data) {
-		sleep(1);
-		kill(0, SIGHUP);
-		return 0;
-	}
-
-	DeviceProxy * get_deviceproxy_plugin(ConfigParser *cfg) {
-		proxy = new DeviceProxy_LibUSB(cfg);
-		return (DeviceProxy *)proxy;
-	}
-
-	void destroy_plugin() {
-		delete proxy;
-	}
+	int hotplug_callback(struct libusb_context *ctx, struct libusb_device *dev, libusb_hotplug_event envet, void *user_data);
 }
 
 //CLEANUP hotplug support
@@ -76,14 +57,14 @@ DeviceProxy_LibUSB::DeviceProxy_LibUSB(ConfigParser *cfg) :
 		vendorId = LIBUSB_HOTPLUG_MATCH_ANY;
 	else
 		vendorId = stoi(vid_str, nullptr, 16);
-	//cerr << "vendorId=" << hex4(vendorId) << endl;
+	cerr << "vendorId=" << hex4(vendorId) << endl;
 
 	string pid_str = cfg->get("productId");
 	if (pid_str == "")
 		productId = LIBUSB_HOTPLUG_MATCH_ANY;
 	else
 		productId = stoi(pid_str, nullptr, 16);
-	//cerr << "productId=" << hex4(productId) << endl;
+	cerr << "productId=" << hex4(productId) << endl;
 
 	bool includeHubs = false;
 
@@ -555,4 +536,16 @@ int DeviceProxy_LibUSB::check_device_response(libusb_device_handle* dev_handle)
 {
 	unsigned char unused[4];
 	return libusb_get_string_descriptor(dev_handle, 0, 0, unused, sizeof(unused));
+}
+
+void DeviceProxy_LibUSB::set_identity(const char* manufacturer, const char* product, const char* serialNumber)
+{
+	free((void*)manufacturer);
+	free((void*)product);
+	free((void*)serialNumber);
+}
+
+bool DeviceProxy_LibUSB::skip_action(const char* action)
+{
+	return false;
 }

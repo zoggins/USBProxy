@@ -43,6 +43,9 @@ public:
 	virtual void release_interface(__u8 interface)=0;
 
 	virtual __u8 get_address()=0;
+
+	virtual void set_identity(const char* manufacturer, const char* product, const char* serialNumber) = 0;
+	virtual bool skip_action(const char* action) = 0;
 };
 
 extern "C" {

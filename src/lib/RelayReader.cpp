@@ -49,9 +49,9 @@ RelayReader::~RelayReader() {
 }
 
 void RelayReader::relay_read_setup() {
-	if (!hostProxy) {//fprintf(stderr,"HostProxy not initialized for EP00 reader.\n");
+	if (!hostProxy) {fprintf(stderr,"HostProxy not initialized for EP00 reader.\n");
 		return;}
-	if (!_recvQueue) {//fprintf(stderr,"inQueue not initialized for EP00 reader.\n");
+	if (!_recvQueue) {fprintf(stderr,"inQueue not initialized for EP00 reader.\n");
 		return;}
 
 	bool idle=true;
@@ -62,7 +62,7 @@ void RelayReader::relay_read_setup() {
 	bool direction_out=true;
 	usb_ctrlrequest ctrl_req;
 
-	//fprintf(stderr,"Starting setup reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
+	fprintf(stderr,"Starting setup reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
 	while (!_please_stop) {
 		idle=true;
 		if (direction_out) {
@@ -111,7 +111,7 @@ void RelayReader::relay_read_setup() {
 		}
 		if (idle) sched_yield();
 	}
-	//fprintf(stderr,"Finished setup reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
+	fprintf(stderr,"Finished setup reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
 	_please_stop = false;
 }
 
@@ -124,7 +124,7 @@ void RelayReader::relay_read() {
 	__u8* buf;
 	int length;
 
-	//fprintf(stderr,"Starting reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
+	fprintf(stderr,"Starting reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
 	while (!_please_stop) {
 		buf=NULL;
 		length=0;
@@ -132,6 +132,6 @@ void RelayReader::relay_read() {
 		if (length)
 			_sendQueue->enqueue(std::make_shared<Packet>(endpoint, buf, length));
 	}
-	//fprintf(stderr,"Finished reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
+	fprintf(stderr,"Finished reader thread (%ld) for EP%02x.\n",gettid(),endpoint);
 	_please_stop = false;
 }

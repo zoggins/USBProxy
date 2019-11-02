@@ -21,6 +21,34 @@
 
 //CLEANUP what happends if device is HS but host is not, in terms of correct config to use,etc.
 
+void Device::call_set_identity(DeviceProxy* _proxy)
+{
+	char* manufacturer = NULL;
+	char* product = NULL;
+	char* serialNumber = NULL;
+	USBString* s;
+	if (descriptor.iManufacturer) {
+		s = get_manufacturer_string();
+		if (s) {
+			manufacturer = s->get_ascii();
+		}
+	}
+	if (descriptor.iProduct) {
+		s = get_product_string();
+		if (s) {
+			product = s->get_ascii();
+		}
+	}
+	if (descriptor.iSerialNumber) {
+		s = get_serial_string();
+		if (s) {
+			serialNumber = s->get_ascii();
+		}
+	}
+
+	_proxy->set_identity(manufacturer, product, serialNumber);
+}
+
 Device::Device(DeviceProxy* _proxy) {
 	hostConfigurationIndex=-1;
 	hostAddress=-1;
@@ -55,6 +83,8 @@ Device::Device(DeviceProxy* _proxy) {
 	if (descriptor.iProduct) {add_string(descriptor.iProduct);}
 	if (descriptor.iSerialNumber) {add_string(descriptor.iSerialNumber);}
 
+	call_set_identity(_proxy);
+
 	for(i=0;i<descriptor.bNumConfigurations;i++) {
 		configurations[i]=new Configuration(this,proxy,i);
 		__u8 iConfiguration=configurations[i]->get_descriptor()->iConfiguration;
@@ -70,7 +100,8 @@ Device::Device(DeviceProxy* _proxy) {
 					if ( configurations[i]->get_interface_alternate(j,k)->get_descriptor()) {
 						__u8 iInterface=configurations[i]->get_interface_alternate(j,k)->get_descriptor()->iInterface;
 						if (iInterface) {
-							add_string(iInterface);
+							if (!_proxy->skip_action("AddInterfaceString"))
+								add_string(iInterface);
 						}
 					}
 				}
@@ -217,43 +248,43 @@ Configuration* Device::get_configuration(__u8 index) {
 }
 
 void Device::print(__u8 tabs) {
-	//int i;
-	//char* hex=hex_string(&descriptor,sizeof(descriptor));
-	//free(hex);
+	int i;
+	char* hex=hex_string(&descriptor,sizeof(descriptor));
+	free(hex);
 
-	//USBString* s;
-	//if (descriptor.iManufacturer) {
-	//	s=get_manufacturer_string();
-	//	if (s) {
-	//		char* ascii=s->get_ascii();
-	//		printf("%.*s  Manufacturer: %s\n",tabs,TABPADDING,ascii);
-	//		free(ascii);
-	//	}
-	//}
-	//if (descriptor.iProduct) {
-	//	s=get_product_string();
-	//	if (s) {
-	//		char* ascii=s->get_ascii();
-	//		printf("%.*s  Product:      %s\n",tabs,TABPADDING,ascii);
-	//		free(ascii);
-	//	}
-	//}
-	//if (descriptor.iSerialNumber) {
-	//	s=get_serial_string();
-	//	if (s) {
-	//		char* ascii=s->get_ascii();
-	//		printf("%.*s  Serial:       %s\n",tabs,TABPADDING,ascii);
-	//		free(ascii);
-	//	}
-	//}
-	//for(i=0;i<descriptor.bNumConfigurations;i++) {
-	//	if (configurations[i]) {
-	//		configurations[i]->print(tabs+1,configurations[i]==get_active_configuration()?true:false);
-	//	}
-	//}
-	//if (qualifier) {
-	//	qualifier->print(tabs);
-	//}
+	USBString* s;
+	if (descriptor.iManufacturer) {
+		s=get_manufacturer_string();
+		if (s) {
+			char* ascii=s->get_ascii();
+			printf("%.*s  Manufacturer: %s\n",tabs,TABPADDING,ascii);
+			free(ascii);
+		}
+	}
+	if (descriptor.iProduct) {
+		s=get_product_string();
+		if (s) {
+			char* ascii=s->get_ascii();
+			printf("%.*s  Product:      %s\n",tabs,TABPADDING,ascii);
+			free(ascii);
+		}
+	}
+	if (descriptor.iSerialNumber) {
+		s=get_serial_string();
+		if (s) {
+			char* ascii=s->get_ascii();
+			printf("%.*s  Serial:       %s\n",tabs,TABPADDING,ascii);
+			free(ascii);
+		}
+	}
+	for(i=0;i<descriptor.bNumConfigurations;i++) {
+		if (configurations[i]) {
+			configurations[i]->print(tabs+1,configurations[i]==get_active_configuration()?true:false);
+		}
+	}
+	if (qualifier) {
+		qualifier->print(tabs);
+	}
 }
 
 void Device::add_string(USBString* string) {

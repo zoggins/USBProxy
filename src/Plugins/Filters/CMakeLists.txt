@@ -8,7 +8,7 @@ set(PACKAGE usbproxy_filters)
 include_directories(${libusbproxy_SOURCE_DIR})
 LIST(APPEND PLUGINS_LINK_LIBS USBProxy)
 
-LIST(APPEND PLUGINS PacketFilter_Callback PacketFilter_KeyLogger PacketFilter_ROT13 PacketFilter_UDPHID PacketFilter_MassStorage PacketFilter_Power PacketFilter_StreamLog PacketFilter_Xbox PacketFilter_PSClassic PacketFilter_Switch PacketFilter_Xbox360 PacketFilter_NeoGeo)
+LIST(APPEND PLUGINS PacketFilter_Callback PacketFilter_KeyLogger PacketFilter_ROT13 PacketFilter_UDPHID PacketFilter_MassStorage PacketFilter_Power PacketFilter_StreamLog PacketFilter_Xbox PacketFilter_PSClassic PacketFilter_Switch PacketFilter_Xbox360 PacketFilter_NeoGeo PacketFilter_PS3)
 
 find_package(PCAP)
 
@@ -25,7 +25,7 @@ endif( ${PCAP_FOUND} )
 
 foreach(plugin ${PLUGINS})
 	add_library(${plugin} SHARED ${plugin}.cpp)
-	set_source_files_properties(${plugin}.cpp PROPERTIES COMPILE_FLAGS  "-std=c++11 -pthread -Wall")
+	set_source_files_properties(${plugin}.cpp PROPERTIES COMPILE_FLAGS  "-std=c++11 -pthread -Wall -O3")
 	set_target_properties(${plugin} PROPERTIES PREFIX "")
 	target_link_libraries(${plugin} ${PLUGINS_LINK_LIBS})
 	install(TARGETS ${plugin}
