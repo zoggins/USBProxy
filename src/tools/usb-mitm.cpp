@@ -44,6 +44,7 @@ void usage(char *arg) {
 	printf("\t-u RetroSpy PS3 mode\n");
 	printf("\t-b RetroSpy Xbox 360 mode\n");
 	printf("\t-g RetroSpy NeoGeo mode\n");
+	printf("\t-m RetroSpy TG16 mode\n");
 	printf("\t-k Keylogger with ROT13 filter (for demo), specify optional filename to output to instead of stderr\n");
 	printf("\t-w <filename> Write to pcap file for viewing in Wireshark\n");
 	printf("\t-h Display this message\n");
@@ -96,7 +97,7 @@ extern "C" int main(int argc, char **argv)
 	
 	ConfigParser *cfg = new ConfigParser();
 
-	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgu")) != EOF) {
+	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbguj")) != EOF) {
 		switch (opt) {
 		case 'v':
 			cfg->set("vendorId", optarg);
@@ -198,6 +199,10 @@ extern "C" int main(int argc, char **argv)
 			device_set = true;
 			cfg->set("HostProxy", "HostProxy_PS3");
 			host_set = true;
+			break;
+		case 'j':
+			cfg->add_to_vector("Plugins", "PacketFilter_TG16Mini");
+			cfg->add_pointer("PacketFilter_TG16Mini::file", stdout);
 			break;
 		case 'h':
 		default:
