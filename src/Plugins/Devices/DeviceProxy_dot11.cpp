@@ -432,3 +432,8 @@ bool DeviceProxy_dot11::skip_action(const char* action)
 {
 	return false;
 }
+
+int DeviceProxy_dot11::num_interfaces(Configuration* cfg)
+{
+	return cfg->get_descriptor()->bNumInterfaces;
+}

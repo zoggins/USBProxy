@@ -46,6 +46,7 @@ public:
 
 	virtual void set_identity(const char* manufacturer, const char* product, const char* serialNumber) = 0;
 	virtual bool skip_action(const char* action) = 0;
+	virtual int num_interfaces(Configuration* cfg) = 0;
 };
 
 extern "C" {

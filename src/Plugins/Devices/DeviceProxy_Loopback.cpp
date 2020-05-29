@@ -371,3 +371,8 @@ bool DeviceProxy_Loopback::skip_action(const char* action)
 {
 	return false;
 }
+
+int DeviceProxy_Loopback::num_interfaces(Configuration* cfg)
+{
+	return cfg->get_descriptor()->bNumInterfaces;
+}

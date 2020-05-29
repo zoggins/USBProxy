@@ -340,6 +340,12 @@ int DeviceProxy_LibUSB::control_request(const usb_ctrlrequest *setup_packet, int
 	int rc = libusb_control_transfer(dev_handle, setup_packet->bRequestType, setup_packet->bRequest,
 		setup_packet->wValue, setup_packet->wIndex, dataptr, setup_packet->wLength, timeout);
 
+	if (swallow_setup_packet_ignore_error(setup_packet))
+	{
+		*nbytes = 0;
+		return 0;
+	}
+
 	if (rc < 0 && !swallow_setup_packet_send_error(setup_packet)) {
 		if (debugLevel) {
 			cerr << "Error sending setup packet: " << libusb_strerror((libusb_error)rc) << endl;
@@ -532,6 +538,11 @@ bool DeviceProxy_LibUSB::swallow_setup_packet_send_error(const usb_ctrlrequest* 
 	return false;
 }
 
+bool DeviceProxy_LibUSB::swallow_setup_packet_ignore_error(const usb_ctrlrequest* setup_packet)
+{
+	return false;
+}
+
 int DeviceProxy_LibUSB::check_device_response(libusb_device_handle* dev_handle)
 {
 	unsigned char unused[4];
@@ -548,4 +559,9 @@ void DeviceProxy_LibUSB::set_identity(const char* manufacturer, const char* prod
 bool DeviceProxy_LibUSB::skip_action(const char* action)
 {
 	return false;
+}
+
+int DeviceProxy_LibUSB::num_interfaces(Configuration* cfg)
+{
+	return cfg->get_descriptor()->bNumInterfaces;
 }

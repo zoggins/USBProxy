@@ -50,6 +50,7 @@ public:
 
 	void set_identity(const char* manufacturer, const char* product, const char* serialNumber);
 	bool skip_action(const char* action);
+	int num_interfaces(Configuration* cfg);
 
 	__u8 get_address();
 };
