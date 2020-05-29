@@ -6,6 +6,7 @@
 #define USBPROXY_DEVICEPROXYNULL_H
 
 #include "DeviceProxy.h"
+#include "Configuration.h"
 
 class DeviceProxy_Null: public DeviceProxy {
 private:
