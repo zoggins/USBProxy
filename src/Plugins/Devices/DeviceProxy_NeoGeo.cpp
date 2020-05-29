@@ -28,7 +28,7 @@ extern "C" {
 	}
 
 	DeviceProxy * get_deviceproxy_plugin(ConfigParser *cfg) {
-		proxy = new DeviceProxy_Xbox360(cfg);
+		proxy = new DeviceProxy_NeoGeo(cfg);
 		return (DeviceProxy *)proxy;
 	}
 

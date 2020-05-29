@@ -9,7 +9,7 @@ PacketFilter_NeoGeo::PacketFilter_NeoGeo(ConfigParser *cfg) {
 }
 
 void PacketFilter_NeoGeo::filter_packet(Packet* packet) {
-	if (packet->wLength == 21) {
+	if (packet->wLength == 21 || packet->wLength == 9) {
 		for (int i = 0; i < 8; ++i)
 			fprintf(file, "%d", (packet->data[0] & (1 << i)) != 0);
 		for (int i = 0; i < 8; ++i)
