@@ -15,6 +15,7 @@
 #include "DeviceProxy_LibUSB.h"
 #include "TRACE.h"
 #include "HexString.h"
+#include "Configuration.h"
 
 using namespace std;
 
