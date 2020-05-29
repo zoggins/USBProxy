@@ -56,7 +56,7 @@ DeviceProxy_NeoGeo::~DeviceProxy_NeoGeo()
 
 bool DeviceProxy_NeoGeo::swallow_setup_packet_ignore_error(const usb_ctrlrequest* setup_packet)
 {
-	return return setup_packet->wValue == 0 && setup_packet->wIndex == 0;
+	return setup_packet->wValue == 0 && setup_packet->wIndex == 0;
 }
 
 int DeviceProxy_NeoGeo::num_interfaces(Configuration* cfg)
