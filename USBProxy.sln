@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1145
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{803FD0C6-D64E-4E16-9DC3-1DAEC859A3D2}") = "USBProxy", "USBProxy.vgdbcmake", "{D508C714-164D-4A20-9F08-16B92BBD226F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|VisualGDB = Debug|VisualGDB
+		MinSizeRel|VisualGDB = MinSizeRel|VisualGDB
+		Release|VisualGDB = Release|VisualGDB
+		RelWithDebInfo|VisualGDB = RelWithDebInfo|VisualGDB
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.Debug|VisualGDB.ActiveCfg = Debug|VisualGDB
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.Debug|VisualGDB.Build.0 = Debug|VisualGDB
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.MinSizeRel|VisualGDB.ActiveCfg = MinSizeRel|VisualGDB
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.MinSizeRel|VisualGDB.Build.0 = MinSizeRel|VisualGDB
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.Release|VisualGDB.ActiveCfg = Release|VisualGDB
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.Release|VisualGDB.Build.0 = Release|VisualGDB
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.RelWithDebInfo|VisualGDB.ActiveCfg = RelWithDebInfo|VisualGDB
+		{D508C714-164D-4A20-9F08-16B92BBD226F}.RelWithDebInfo|VisualGDB.Build.0 = RelWithDebInfo|VisualGDB
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01E4680D-490E-4844-B7DB-A2BA9651242F}
+	EndGlobalSection
+EndGlobal

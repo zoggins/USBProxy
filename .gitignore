@@ -27,3 +27,6 @@ version.h
 version
 /.vs
 build
+CodeDB
+VisualGDB
+VisualGDBCache
