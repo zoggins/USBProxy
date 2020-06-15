@@ -40,6 +40,7 @@ public:
 	// modified 20141003 atsumi@aizulab.com
 	void setEp2inf( __u8 *ep2inf_, __u8 *claimedInterface_) {};
 	__u8 get_address();
+	int num_interfaces(Configuration* cfg);
 	char* toString() {return (char *) "TCP device proxy";}
 };
 

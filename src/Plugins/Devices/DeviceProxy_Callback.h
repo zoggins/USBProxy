@@ -70,6 +70,8 @@ public:
 	bool skip_action(const char* action);
 
 	__u8 get_address();
+
+	int num_interfaces(Configuration* cfg);
 };
 
 #endif /* USBPROXY_DEVICEPROXY_CALLBACK_H */

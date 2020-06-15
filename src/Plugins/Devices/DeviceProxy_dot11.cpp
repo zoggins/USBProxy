@@ -12,6 +12,7 @@
 #include "Packet.h"
 #include "TRACE.h"
 #include "USBString.h"
+#include "Configuration.h"
 
 // Find the right place to pull this in from
 #define cpu_to_le16(x) (x)
@@ -431,4 +432,9 @@ void DeviceProxy_dot11::set_identity(const char* manufacturer, const char* produ
 bool DeviceProxy_dot11::skip_action(const char* action)
 {
 	return false;
+}
+
+int DeviceProxy_dot11::num_interfaces(Configuration* cfg)
+{
+	return cfg->get_descriptor()->bNumInterfaces;
 }

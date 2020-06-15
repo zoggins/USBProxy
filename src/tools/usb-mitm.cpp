@@ -184,6 +184,8 @@ extern "C" int main(int argc, char **argv)
 		case 'g':
 			cfg->add_to_vector("Plugins", "PacketFilter_NeoGeo");
 			cfg->add_pointer("PacketFilter_NeoGeo::file", stdout);
+			cfg->set("DeviceProxy", "DeviceProxy_NeoGeo");
+			device_set = true;
 			break;
 		case 'b':
 			cfg->add_to_vector("Plugins", "PacketFilter_Xbox360");

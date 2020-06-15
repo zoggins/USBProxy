@@ -6,6 +6,7 @@
 #define USBPROXY_DEVICEPROXYNULL_H
 
 #include "DeviceProxy.h"
+#include "Configuration.h"
 
 class DeviceProxy_Null: public DeviceProxy {
 private:
@@ -34,6 +35,7 @@ public:
 		free((void*)serialNumber); 
 	}
 	bool skip_action(const char* action) { return false; }
+	int num_interfaces(Configuration* cfg) { return cfg->get_descriptor()->bNumInterfaces; }
 };
 
 #endif /* USBPROXY_DEVICEPROXYNULL_H */

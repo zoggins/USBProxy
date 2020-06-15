@@ -40,8 +40,17 @@ if( ${LIBUSB_FOUND} )
 	add_library(DeviceProxy_Xbox360 SHARED DeviceProxy_Xbox360.cpp DeviceProxy_LibUSB.cpp)
 	set_source_files_properties(DeviceProxy_Xbox360.cpp PROPERTIES COMPILE_FLAGS  "${CMAKE_CPP_FLAGS}")
 	set_target_properties(DeviceProxy_Xbox360 PROPERTIES PREFIX "")
-	target_link_libraries(DeviceProxy_Xbox ${PLUGINS_LINK_LIBS})
+	target_link_libraries(DeviceProxy_Xbox360 ${PLUGINS_LINK_LIBS})
 	install(TARGETS DeviceProxy_Xbox360
+        LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
+        COMPONENT sharedlibs
+        )
+
+	add_library(DeviceProxy_NeoGeo SHARED DeviceProxy_NeoGeo.cpp DeviceProxy_LibUSB.cpp)
+	set_source_files_properties(DeviceProxy_NeoGeo.cpp PROPERTIES COMPILE_FLAGS  "${CMAKE_CPP_FLAGS}")
+	set_target_properties(DeviceProxy_NeoGeo PROPERTIES PREFIX "")
+	target_link_libraries(DeviceProxy_NeoGeo ${PLUGINS_LINK_LIBS})
+	install(TARGETS DeviceProxy_NeoGeo
         LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
         COMPONENT sharedlibs
         )

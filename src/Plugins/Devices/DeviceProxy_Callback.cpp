@@ -10,6 +10,7 @@
 #include "HexString.h"
 #include "TRACE.h"
 #include "USBString.h"
+#include "Configuration.h"
 
 // Find the right place to pull this in from
 #define cpu_to_le16(x) (x)
@@ -153,4 +154,9 @@ void DeviceProxy_Callback::set_identity(const char* manufacturer, const char* pr
 bool DeviceProxy_Callback::skip_action(const char* action)
 {
 	return false;
+}
+
+int DeviceProxy_Callback::num_interfaces(Configuration* cfg)
+{
+	return cfg->get_descriptor()->bNumInterfaces;
 }

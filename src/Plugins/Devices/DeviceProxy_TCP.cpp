@@ -158,3 +158,8 @@ bool DeviceProxy_TCP::skip_action(const char* action)
 {
 	return false;
 }
+
+int DeviceProxy_TCP::num_interfaces(Configuration* cfg)
+{
+	return cfg->get_descriptor()->bNumInterfaces;
+}
