@@ -54,6 +54,15 @@ if( ${LIBUSB_FOUND} )
         LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
         COMPONENT sharedlibs
         )
+
+	add_library(DeviceProxy_PS3 SHARED DeviceProxy_PS3.cpp DeviceProxy_LibUSB.cpp)
+	set_source_files_properties(DeviceProxy_PS3.cpp PROPERTIES COMPILE_FLAGS  "${CMAKE_CPP_FLAGS}")
+	set_target_properties(DeviceProxy_PS3 PROPERTIES PREFIX "")
+	target_link_libraries(DeviceProxy_PS3 ${PLUGINS_LINK_LIBS})
+	install(TARGETS DeviceProxy_PS3
+        LIBRARY DESTINATION lib/USBProxy${LIB_SUFFIX}
+        COMPONENT sharedlibs
+        )
 else( ${LIBUSB_FOUND} )
 	if( USE_LIBUSB1 AND NOT ${LIBUSB_FOUND} )
 		message( FATAL_ERROR

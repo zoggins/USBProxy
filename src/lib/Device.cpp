@@ -19,6 +19,8 @@
 #include "USBString.h"
 #include "DeviceProxy.h"
 
+#include <string>
+
 //CLEANUP what happends if device is HS but host is not, in terms of correct config to use,etc.
 
 void Device::call_set_identity(DeviceProxy* _proxy)
@@ -501,4 +503,9 @@ const definition_error Device::is_defined() {
 	}
 
 	return definition_error();
+}
+
+std::string Device::deviceString()
+{
+	return std::string(proxy->toString());	
 }
