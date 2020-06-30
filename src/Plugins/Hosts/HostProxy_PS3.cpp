@@ -68,9 +68,13 @@ void HostProxy_PS3::handle_USB_REQ_SET_CONFIGURATION()
 	return;
 }
 
-int HostProxy_PS3::send_descriptor(int p_device_file, char* descriptor, int descriptorLength)
+int HostProxy_PS3::send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device)
 {
-	return write(p_device_file, fake_ds3_descriptor, 104);
+	if (strncmp(device->deviceString().c_str(), "054c:05c4", 9) == 0
+		|| strncmp(device->deviceString().c_str(), "054c:09cc", 9) == 0)
+		return write(p_device_file, descriptor, descriptorLength);
+	else
+		return write(p_device_file, fake_ds3_descriptor, 104);
 }
 
 static HostProxy_PS3 *proxy;

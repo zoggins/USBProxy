@@ -70,7 +70,6 @@ int HostProxy_GadgetFS::generate_descriptor(Device* device) {
 	ptr[0] = ptr[1] = ptr[2] = ptr[3] = 0;
 	ptr += 4;
 
-
 	Configuration* cfg;
 	for (i=1;i<=device->get_descriptor()->bNumConfigurations;i++) {
 		if (device->is_highspeed() && device->get_device_qualifier()) {
@@ -164,7 +163,7 @@ int HostProxy_GadgetFS::connect(Device* device,int timeout) {
 		return 1;
 	}
 
-	status = send_descriptor(p_device_file, descriptor, descriptorLength);
+	status = send_descriptor(p_device_file, descriptor, descriptorLength, device);
 	if (status < 0) {
 		fprintf(stderr,"Fail on write %d %s\n",errno,strerror(errno));
 		close(p_device_file);
@@ -581,7 +580,7 @@ bool HostProxy_GadgetFS::do_not_send(__u8 endpoint, int* length)
 	return false;
 }
 
-int HostProxy_GadgetFS::send_descriptor(int p_device_file, char* descriptor, int descriptorLength)
+int HostProxy_GadgetFS::send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device)
 {
 	return write(p_device_file, descriptor, descriptorLength);
 }

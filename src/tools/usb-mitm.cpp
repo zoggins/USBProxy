@@ -197,7 +197,7 @@ extern "C" int main(int argc, char **argv)
 		case 'u':
 			cfg->add_to_vector("Plugins", "PacketFilter_PS3");
 			cfg->add_pointer("PacketFilter_PS3::file", stdout);
-			cfg->set("DeviceProxy", "DeviceProxy_LibUSB");
+			cfg->set("DeviceProxy", "DeviceProxy_PS3");
 			device_set = true;
 			cfg->set("HostProxy", "HostProxy_PS3");
 			host_set = true;

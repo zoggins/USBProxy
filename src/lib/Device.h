@@ -7,6 +7,7 @@
 
 #include <linux/usb/ch9.h>
 #include "DefinitionErrors.h"
+#include <string>
 
 //CLEANUP error checking on malloc/calloc/realloc
 //CLEANUP leak checking on malloc/calloc/realloc
@@ -68,6 +69,7 @@ public:
 	void set_device_qualifier(DeviceQualifier* _qualifier);
 	bool is_highspeed();
 	const definition_error is_defined();
+	std::string deviceString();
 };
 
 #endif /* USBPROXY_DEVICE_H */
