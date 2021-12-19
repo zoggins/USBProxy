@@ -1,16 +1,27 @@
 <?xml version="1.0"?>
-<VisualGDBProjectSettings2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ConfigurationName>Debug</ConfigurationName>
+<VisualGDBProjectSettings2 xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Project xsi:type="com.visualgdb.project.linux">
     <CustomSourceDirectories>
       <Directories />
       <PathStyle>RemoteUnix</PathStyle>
     </CustomSourceDirectories>
+    <AutoProgramSPIFFSPartition>true</AutoProgramSPIFFSPartition>
     <BuildHost>
-      <HostName>beaglebone.local</HostName>
+      <HostName>192.168.1.95</HostName>
       <Transport>SSH</Transport>
       <UserName>debian</UserName>
     </BuildHost>
+    <MainSourceTransferCommand>
+      <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
+      <LocalDirectory>$(ProjectDir)</LocalDirectory>
+      <RemoteDirectory>/tmp/VisualGDB/$(ProjectDirUnixStyle)</RemoteDirectory>
+      <FileMasks />
+      <TransferNewFilesOnly>true</TransferNewFilesOnly>
+      <IncludeSubdirectories>true</IncludeSubdirectories>
+      <SelectedDirectories />
+      <DeleteDisappearedFiles>false</DeleteDisappearedFiles>
+      <ApplyGlobalExclusionList>true</ApplyGlobalExclusionList>
+    </MainSourceTransferCommand>
     <DirectAccessDirectory>/home/debian/USBProxy/src</DirectAccessDirectory>
     <AllowChangingHostForMainCommands>false</AllowChangingHostForMainCommands>
     <SkipBuildIfNoSourceFilesChanged>false</SkipBuildIfNoSourceFilesChanged>
@@ -20,13 +31,14 @@
     <MainSourceDirectoryForLocalBuilds>$(ProjectDir)</MainSourceDirectoryForLocalBuilds>
   </Project>
   <Build xsi:type="com.visualgdb.build.cmake">
+    <BuildLogMode xsi:nil="true" />
     <ToolchainID>
       <ID>com.sysprogs.toolchain.default-gcc</ID>
       <Version>
         <Revision>0</Revision>
       </Version>
     </ToolchainID>
-    <RelativeSourceDirectory />
+    <RelativeSourceDirectory>/</RelativeSourceDirectory>
     <ConfigurationType>DEBUG</ConfigurationType>
     <BinaryDirectory>VisualGDB/$(ConfigurationName)</BinaryDirectory>
     <MakeCommandTemplate>
@@ -62,14 +74,16 @@
     <DisableToolchainFile>false</DisableToolchainFile>
     <DeployAsRoot>false</DeployAsRoot>
     <CMakeCleanMode>RemoveBuildDirectory</CMakeCleanMode>
+    <UseCCache>false</UseCCache>
     <ProjectModeSettings>
       <ProjectItemSettings>
         <GroupSourcesByTypes>true</GroupSourcesByTypes>
         <GroupSourcesByPaths>true</GroupSourcesByPaths>
         <GroupTargetsByPaths>true</GroupTargetsByPaths>
+        <FollowCMakeSourceGroups>false</FollowCMakeSourceGroups>
         <AutoRefreshProject>true</AutoRefreshProject>
+        <AlwaysConsiderOutdated>false</AlwaysConsiderOutdated>
         <SortTargetsByName>true</SortTargetsByName>
-        <UseCMakeUpToDateCheck>false</UseCMakeUpToDateCheck>
         <RedundantTargetMode>HideOuterProjectTargets</RedundantTargetMode>
         <SortSourcesByName>true</SortSourcesByName>
         <BuildAllTargetsInSubdir>false</BuildAllTargetsInSubdir>
@@ -81,6 +95,7 @@
       <VirtualFolders />
       <ConfigurationNameCase>Upper</ConfigurationNameCase>
       <DefaultHeaderDiscoveryMode>HeaderDirectoryOnly</DefaultHeaderDiscoveryMode>
+      <EnableFastUpToDateCheck>true</EnableFastUpToDateCheck>
     </ProjectModeSettings>
   </Build>
   <CustomBuild>
@@ -145,21 +160,29 @@
       <ExamineRegistersInRawFormat>true</ExamineRegistersInRawFormat>
       <DisableSignals>false</DisableSignals>
       <EnableAsyncExecutionMode>false</EnableAsyncExecutionMode>
+      <AsyncModeSupportsBreakpoints>true</AsyncModeSupportsBreakpoints>
+      <TemporaryBreakConsolidationTimeout>0</TemporaryBreakConsolidationTimeout>
       <EnableNonStopMode>false</EnableNonStopMode>
       <MaxBreakpointLimit>0</MaxBreakpointLimit>
+      <EnableVerboseMode>true</EnableVerboseMode>
+      <EnablePrettyPrinters>false</EnablePrettyPrinters>
     </AdditionalGDBSettings>
     <LaunchGDBSettings xsi:type="GDBLaunchParametersNewInstance">
       <DebuggedProgram>$(TargetPath)</DebuggedProgram>
       <GDBServerPort>2000</GDBServerPort>
       <ProgramArguments>$(SelectedCMakeTargetArgs)</ProgramArguments>
       <WorkingDirectory>$(SelectedCMakeTargetLaunchDir)</WorkingDirectory>
+      <ArgumentEscapingMode>Auto</ArgumentEscapingMode>
     </LaunchGDBSettings>
     <GenerateCtrlBreakInsteadOfCtrlC>false</GenerateCtrlBreakInsteadOfCtrlC>
+    <SuppressArgumentVariablesCheck>false</SuppressArgumentVariablesCheck>
     <X11WindowMode>Local</X11WindowMode>
     <KeepConsoleAfterExit>false</KeepConsoleAfterExit>
     <RunGDBUnderSudo>false</RunGDBUnderSudo>
     <DeploymentMode>Auto</DeploymentMode>
     <DeployWhenLaunchedWithoutDebugging>true</DeployWhenLaunchedWithoutDebugging>
+    <StripDebugSymbolsDuringDeployment>false</StripDebugSymbolsDuringDeployment>
     <SuppressTTYCreation>false</SuppressTTYCreation>
+    <IndexDebugSymbols>false</IndexDebugSymbols>
   </Debug>
 </VisualGDBProjectSettings2>
