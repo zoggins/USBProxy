@@ -330,6 +330,8 @@ char* DeviceProxy_LibUSB::toString() {
 int DeviceProxy_LibUSB::control_request(const usb_ctrlrequest *setup_packet, int *nbytes, unsigned char * dataptr,
 	int timeout) {
 
+	cerr << "here\n";
+
 	timeout = control_request_timeout_override(timeout);
 
 	if (debugLevel > 1) {
@@ -435,7 +437,7 @@ void DeviceProxy_LibUSB::send_data(uint8_t endpoint, uint8_t attributes, uint16_
 void DeviceProxy_LibUSB::receive_data(uint8_t endpoint, uint8_t attributes, uint16_t maxPacketSize, uint8_t ** dataptr,
 	int* length, int timeout) {
 
-	if (!endpoint_interface_claimed(endpoint)) {
+	if (!endpoint_interface_claimed(endpoint) || ignore_endpoints(endpoint)) {
 		//do not try to receive if interface wasn't claimed successfully
 		return;
 	}
@@ -565,4 +567,9 @@ bool DeviceProxy_LibUSB::skip_action(const char* action)
 int DeviceProxy_LibUSB::num_interfaces(Configuration* cfg)
 {
 	return cfg->get_descriptor()->bNumInterfaces;
+}
+
+bool DeviceProxy_LibUSB::ignore_endpoints(uint8_t endpoint)
+{
+	return false;
 }
