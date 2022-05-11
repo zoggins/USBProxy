@@ -99,10 +99,10 @@ void PacketFilter_PS4::filter_packet(Packet* packet) {
 		windowPosition += 1;
 		windowPosition = (windowPosition % 3);
 
-		touchpad_x1 = middleOfThree(window[0][0], window[0][1], window[0][2]);
-		touchpad_y1 = middleOfThree(window[1][0], window[1][1], window[1][2]);
-		touchpad_x2 = middleOfThree(window[2][0], window[2][1], window[2][2]);
-		touchpad_y2 = middleOfThree(window[3][0], window[3][1], window[3][2]);
+		int touchpad_x1 = middleOfThree(window[0][0], window[0][1], window[0][2]);
+		int touchpad_y1 = middleOfThree(window[1][0], window[1][1], window[1][2]);
+		int touchpad_x2 = middleOfThree(window[2][0], window[2][1], window[2][2]);
+		int touchpad_y2 = middleOfThree(window[3][0], window[3][1], window[3][2]);
 
 		for (int i = 0; i < 16; ++i)
 			fprintf(file, "%d", ((touchpad_x1 & 0x0FFF) & (1 << i)) != 0);
