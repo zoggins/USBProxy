@@ -93,9 +93,9 @@ void PacketFilter_PS4::filter_packet(Packet* packet) {
                         fprintf(file, "%d", (packet->data[9] & (1 << i)) != 0);
 
 		window[0][windowPosition] = ((packet->data[37] & 0x0F) << 8) | packet->data[36];
-		window[1][windowPosition] = (packet->data[38] << 4 )| (packet->data[37] & 0xF0);
+		window[1][windowPosition] = (packet->data[38] << 4 )| ((packet->data[37] & 0xF0) >> 4);
 		window[2][windowPosition] = ((packet->data[41] & 0x0F) << 8) | packet->data[40];
-		window[3][windowPosition] = (packet->data[42] << 4 )| (packet->data[41] & 0xF0);
+		window[3][windowPosition] = (packet->data[42] << 4) | ((packet->data[41] & 0xF0) >> 4);
 		windowPosition += 1;
 		windowPosition = (windowPosition % 3);
 
