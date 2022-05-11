@@ -4,6 +4,34 @@
 
 #include "PacketFilter_PS4.h"
 
+static int window[4][3];
+static int windowPosition = 0;
+
+int middleOfThree(int a, int b, int c)
+{
+	// Compare each three number to find middle  
+	// number. Enter only if a > b 
+	if (a > b)
+	{
+		if (b > c)
+			return b;
+		else if (a > c)
+			return c;
+		else
+			return a;
+	}
+	else
+	{
+		// Decided a is not greater than b. 
+		if (a > c)
+			return a;
+		else if (b > c)
+			return c;
+		else
+			return b;
+	}
+}
+
 PacketFilter_PS4::PacketFilter_PS4(ConfigParser *cfg) {
 	file  = (FILE *) cfg->get_pointer("PacketFilter_PS4::file");
 }
@@ -64,11 +92,17 @@ void PacketFilter_PS4::filter_packet(Packet* packet) {
 		for(int i = 0; i < 8; ++i)
                         fprintf(file, "%d", (packet->data[9] & (1 << i)) != 0);
 
-		
-		int touchpad_x1 = ((packet->data[37] & 0x0F) << 8) | packet->data[36];
-                int touchpad_y1 = (packet->data[38] << 4 )| (packet->data[37] & 0xF0);
-		int touchpad_x2 = ((packet->data[41] & 0x0F) << 8) | packet->data[40];
-                int touchpad_y2 = (packet->data[42] << 4 )| (packet->data[41] & 0xF0);
+		window[0][windowPosition] = ((packet->data[37] & 0x0F) << 8) | packet->data[36];
+		window[1][windowPosition] = (packet->data[38] << 4 )| (packet->data[37] & 0xF0);
+		window[2][windowPosition] = ((packet->data[41] & 0x0F) << 8) | packet->data[40];
+		window[3][windowPosition] = (packet->data[42] << 4 )| (packet->data[41] & 0xF0);
+		windowPosition += 1;
+		windowPosition = (windowPosition % 3);
+
+		touchpad_x1 = middleOfThree(window[0][0], window[0][1], window[0][2]);
+		touchpad_y1 = middleOfThree(window[1][0], window[1][1], window[1][2]);
+		touchpad_x2 = middleOfThree(window[2][0], window[2][1], window[2][2]);
+		touchpad_y2 = middleOfThree(window[3][0], window[3][1], window[3][2]);
 
 		for (int i = 0; i < 16; ++i)
 			fprintf(file, "%d", ((touchpad_x1 & 0x0FFF) & (1 << i)) != 0);
