@@ -9,9 +9,17 @@
 
 class HostProxy_Xbox: public HostProxy_GadgetFS {
 
+private:
+	static void xbox_aio_send_completion_handler(sigval_t sigval);
+
 protected:
 
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
+
+	virtual bool init_lock();
+	virtual void destroy_lock();
+	virtual struct aiocb* get_aiocp(int number);
+	virtual send_completion_handler ret_free_aio_callback_function();
 
 public:
 	HostProxy_Xbox(ConfigParser *cfg);
