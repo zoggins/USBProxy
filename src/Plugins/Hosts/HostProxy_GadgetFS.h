@@ -43,14 +43,12 @@ protected:
 	virtual bool init_lock();
 	virtual void destroy_lock();
 	virtual struct aiocb* get_aiocp(int number);
-	virtual void free_aiocp(struct aiocb*& aio);
 
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
 	virtual bool do_not_send(__u8 endpoint, int* length);
 	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device);
 
 	static std::atomic<int> numInFlight;
-	static void (*free_aio_fctn)(struct aiocb*& aio);
 
 public:
 	HostProxy_GadgetFS(ConfigParser *cfg);
