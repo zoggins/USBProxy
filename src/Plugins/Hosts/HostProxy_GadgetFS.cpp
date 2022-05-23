@@ -606,11 +606,8 @@ struct aiocb* HostProxy_GadgetFS::get_aiocp(int number)
 	return aio;
 }
 
-void HostProxy_GadgetFS::free_aiocp(struct aiocb*& aio, bool noop)
+void HostProxy_GadgetFS::free_aiocp(struct aiocb*& aio)
 {
-	if (!noop)
-	{
-		free((void*)aio->aio_buf);
-		free((void*)aio);
-	}
+	free((void*)aio->aio_buf);
+	free((void*)aio);
 }
