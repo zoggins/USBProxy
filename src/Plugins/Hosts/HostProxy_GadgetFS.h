@@ -39,6 +39,11 @@ private:
 
 protected:
 
+	virtual bool init_lock();
+	virtual void destroy_lock();
+	virtual struct aiocb* get_aiocp();
+	virtual void free_aiocp(struct aiocb*& aio, bool noop = false);
+
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
 	virtual bool do_not_send(__u8 endpoint, int* length);
 	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device);

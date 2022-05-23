@@ -28,8 +28,7 @@ void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 	numInFlight--;
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	free((void*)aio->aio_buf);
-	free((void*)aio);
+	free_aiocp(aio);
 }
 
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
@@ -156,6 +155,9 @@ int HostProxy_GadgetFS::connect(Device* device,int timeout) {
 		free(hex);
 	}
 
+	if (!init_lock())
+		return 1;
+
 	device_filename = find_gadget_filename();
 	p_device_file = open_gadget(device_filename);
 	if (p_device_file < 0) {
@@ -232,6 +234,8 @@ void HostProxy_GadgetFS::disconnect() {
 			p_epout_async[i]=NULL;
 		}
 	}
+
+	destroy_lock();
 
 	unmount_gadget();
 
@@ -363,6 +367,8 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
 	*aio = *p_epin_async[number];
 	aio->aio_sigevent.sigev_value.sival_ptr = aio;
+
+	free_aiocp(aio, true);
 
 	aio->aio_buf=malloc(length);
 	memcpy((void*)(aio->aio_buf),dataptr,length);
@@ -583,4 +589,32 @@ bool HostProxy_GadgetFS::do_not_send(__u8 endpoint, int* length)
 int HostProxy_GadgetFS::send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device)
 {
 	return write(p_device_file, descriptor, descriptorLength);
+}
+
+bool HostProxy_GadgetFS::init_lock()
+{
+	return true;
+}
+
+void HostProxy_GadgetFS::destroy_lock()
+{
+
+}
+
+struct aiocb* HostProxy_GadgetFS::get_aiocp()
+{
+	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
+	*aio = *p_epin_async[number];
+	aio->aio_sigevent.sigev_value.sival_ptr = aio;
+
+	return aio;
+}
+
+void HostProxy_GadgetFS::free_aiocp(struct aiocb*& aio, bool noop = false)
+{
+	if (!noop)
+	{
+		free((void*)aio->aio_buf);
+		free((void*)aio);
+	}
 }
