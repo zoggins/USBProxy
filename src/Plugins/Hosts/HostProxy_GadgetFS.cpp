@@ -29,7 +29,7 @@ void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 	numInFlight--;
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	HostProxy_GadgetFS::set_free_aio_fctn(aio);
+	(*set_free_aio_fctn)(aio);
 }
 
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
