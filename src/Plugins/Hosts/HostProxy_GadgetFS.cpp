@@ -28,7 +28,8 @@ void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 	numInFlight--;
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	free_aiocp(aio);
+	free((void*)aio->aio_buf);
+	free((void*)aio);
 }
 
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
@@ -547,7 +548,7 @@ void HostProxy_GadgetFS::setConfig(Configuration* fs_cfg,Configuration* hs_cfg,b
 				aio->aio_sigevent.sigev_value.sival_ptr = aio;
 				if (epAddress & 0x80) {
 					aio->aio_sigevent.sigev_notify = SIGEV_THREAD;
-					aio->aio_sigevent.sigev_notify_function = aio_send_completion_handler;
+					aio->aio_sigevent.sigev_notify_function = ret_free_aio_callback_function();
 					p_epin_async[epAddress&0x0f]=aio;
 				} else {
 					if (hs) {
@@ -606,8 +607,7 @@ struct aiocb* HostProxy_GadgetFS::get_aiocp(int number)
 	return aio;
 }
 
-void HostProxy_GadgetFS::free_aiocp(struct aiocb*& aio)
+(send_completion_handler*)(sigval_t sigval) ret_free_aio_callback_function()
 {
-	free((void*)aio->aio_buf);
-	free((void*)aio);
+	return HostProxy_GadgetFS::aio_send_completion_handler;
 }
