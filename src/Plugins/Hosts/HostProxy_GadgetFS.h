@@ -18,12 +18,13 @@ extern "C" {
 #include <pthread.h>
 #include <atomic>
 
+typedef void (*send_completion_handler)(sigval_t sigval);
+
 class HostProxy_GadgetFS: public HostProxy {
 private:
 	bool p_is_connected;
 	int p_device_file;
 	const char* device_filename;
-	struct aiocb* p_epin_async[16];
 	struct aiocb* p_epout_async[16];
 	bool p_epin_active[16];
 
@@ -39,10 +40,16 @@ private:
 
 protected:
 
+	virtual bool init_lock();
+	virtual void destroy_lock();
+	virtual struct aiocb* get_aiocp(int number);
+	virtual send_completion_handler ret_free_aio_callback_function();
+
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
 	virtual bool do_not_send(__u8 endpoint, int* length);
 	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device);
 
+	struct aiocb* p_epin_async[16];
 	static std::atomic<int> numInFlight;
 
 public:
