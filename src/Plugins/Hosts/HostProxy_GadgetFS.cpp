@@ -607,7 +607,7 @@ struct aiocb* HostProxy_GadgetFS::get_aiocp(int number)
 	return aio;
 }
 
-(send_completion_handler*)(sigval_t sigval) ret_free_aio_callback_function()
+(*send_completion_handler)(sigval_t sigval) ret_free_aio_callback_function()
 {
 	return HostProxy_GadgetFS::aio_send_completion_handler;
 }
