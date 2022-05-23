@@ -42,7 +42,7 @@ protected:
 	virtual bool init_lock();
 	virtual void destroy_lock();
 	virtual struct aiocb* get_aiocp(int number);
-	virtual (send_completion_handler*)(sigval_t sigval) ret_free_aio_callback_function();
+	virtual (*send_completion_handler)(sigval_t sigval) ret_free_aio_callback_function();
 
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
 	virtual bool do_not_send(__u8 endpoint, int* length);
