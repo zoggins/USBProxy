@@ -49,7 +49,7 @@ protected:
 	virtual bool do_not_send(__u8 endpoint, int* length);
 	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device);
 
-	struct aiocb* p_epout_async[16];
+	struct aiocb* p_epin_async[16];
 	static std::atomic<int> numInFlight;
 
 public:
