@@ -39,6 +39,7 @@ private:
 
 protected:
 
+	virtual void set_free_aio_fctn();
 	virtual bool init_lock();
 	virtual void destroy_lock();
 	virtual struct aiocb* get_aiocp(int number);
@@ -49,6 +50,7 @@ protected:
 	virtual int send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device);
 
 	static std::atomic<int> numInFlight;
+	static void (*free_aio_fctn)(struct aiocb*& aio);
 
 public:
 	HostProxy_GadgetFS(ConfigParser *cfg);

@@ -23,17 +23,20 @@
 
 std::atomic<int> HostProxy_GadgetFS::numInFlight;
 
+
 void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
 {
 	numInFlight--;
 	struct aiocb* aio;
 	aio = (struct aiocb*)sigval.sival_ptr;
-	free_aiocp(aio);
+	HostProxy_GadgetFS::set_free_aio_fctn(aio);
 }
 
 HostProxy_GadgetFS::HostProxy_GadgetFS(ConfigParser *cfg)
 	: HostProxy(*cfg)
 {
+	set_free_aio_fctn = &free_aiocp;
+
 	numInFlight.store(0);
 	mount_gadget();
 	p_is_connected = false;
