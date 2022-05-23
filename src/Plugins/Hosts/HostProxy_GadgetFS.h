@@ -39,10 +39,10 @@ private:
 
 protected:
 
-	virtual void set_free_aio_fctn();
 	virtual bool init_lock();
 	virtual void destroy_lock();
 	virtual struct aiocb* get_aiocp(int number);
+	void free_aiocp(struct aiocb*& aio);
 
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
 	virtual bool do_not_send(__u8 endpoint, int* length);
