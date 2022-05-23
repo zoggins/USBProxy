@@ -364,11 +364,7 @@ void HostProxy_GadgetFS::send_data(__u8 endpoint,__u8 attributes,__u16 maxPacket
 	if (do_not_send(endpoint, &length))
 		return;
 
-	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
-	*aio = *p_epin_async[number];
-	aio->aio_sigevent.sigev_value.sival_ptr = aio;
-
-	free_aiocp(aio, true);
+	aiocb* aio = get_aiocp(number);
 
 	aio->aio_buf=malloc(length);
 	memcpy((void*)(aio->aio_buf),dataptr,length);
@@ -601,7 +597,7 @@ void HostProxy_GadgetFS::destroy_lock()
 
 }
 
-struct aiocb* HostProxy_GadgetFS::get_aiocp()
+struct aiocb* HostProxy_GadgetFS::get_aiocp(int number)
 {
 	aiocb* aio = (aiocb*)malloc(sizeof(aiocb));
 	*aio = *p_epin_async[number];
@@ -610,7 +606,7 @@ struct aiocb* HostProxy_GadgetFS::get_aiocp()
 	return aio;
 }
 
-void HostProxy_GadgetFS::free_aiocp(struct aiocb*& aio, bool noop = false)
+void HostProxy_GadgetFS::free_aiocp(struct aiocb*& aio, bool noop)
 {
 	if (!noop)
 	{

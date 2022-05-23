@@ -41,7 +41,7 @@ protected:
 
 	virtual bool init_lock();
 	virtual void destroy_lock();
-	virtual struct aiocb* get_aiocp();
+	virtual struct aiocb* get_aiocp(int number);
 	virtual void free_aiocp(struct aiocb*& aio, bool noop = false);
 
 	virtual void handle_USB_REQ_SET_CONFIGURATION();
