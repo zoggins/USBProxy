@@ -1,4 +1,4 @@
-/* This file is part of USBProxy.
+/*This file is part of USBProxy.
  */
 
 #include <errno.h>
@@ -48,6 +48,7 @@ void usage(char *arg) {
 	printf("\t-V RetroSpy VCS mode\n");
 	printf("\t-n RetroSpy Evercade mode\n");
 	printf("\t-q RetroSpy PS4 mode\n");
+	printf("\t-5 RetroSpy A500 Mini mode\n");
 	printf("\t-k Keylogger with ROT13 filter (for demo), specify optional filename to output to instead of stderr\n");
 	printf("\t-w <filename> Write to pcap file for viewing in Wireshark\n");
 	printf("\t-h Display this message\n");
@@ -100,7 +101,7 @@ extern "C" int main(int argc, char **argv)
 	
 	ConfigParser *cfg = new ConfigParser();
 
-	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgujVnq")) != EOF) {
+	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgujVnq5")) != EOF) {
 		switch (opt) {
 		case 'v':
 			cfg->set("vendorId", optarg);
@@ -218,6 +219,10 @@ extern "C" int main(int argc, char **argv)
 			cfg->add_pointer("PacketFilter_EVS::file", stdout);
 			cfg->set("DeviceProxy", "DeviceProxy_EVS");
 			device_set = true;
+			break;
+		case '5':
+			cfg->add_to_vector("Plugins", "PacketFilter_A500");
+			cfg->add_pointer("PacketFilter_A500::file", stdout);
 			break;
 		case 'q':
 			cfg->add_to_vector("Plugins", "PacketFilter_PS4");

@@ -330,8 +330,6 @@ char* DeviceProxy_LibUSB::toString() {
 int DeviceProxy_LibUSB::control_request(const usb_ctrlrequest *setup_packet, int *nbytes, unsigned char * dataptr,
 	int timeout) {
 
-	cerr << "here\n";
-
 	timeout = control_request_timeout_override(timeout);
 
 	if (debugLevel > 1) {
