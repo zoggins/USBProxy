@@ -27,6 +27,8 @@
 #include "RelayWriter.h"
 #include "Injector.h"
 
+#include <pthread.h>
+
 using namespace std;
 
 Manager::Manager(unsigned debug_level)
@@ -450,18 +452,33 @@ void Manager::start_data_relaying() {
 		deviceProxy->claim_interface(ifc_idx);
 	}
 
+	sched_param sch;
+	int policy;
+
 	for(i=1;i<16;i++) {
 		if (in_readers[i]) {
-			in_readerThreads[i] = std::thread(&RelayReader::relay_read, in_readers[i]);
+			in_readerThreads[i] = std::thread(&RelayReader::relay_read, in_readers[i]);	
+			pthread_getschedparam(in_readerThreads[i].native_handle(), &policy, &sch);
+			sch.sched_priority = 99;
+			pthread_setschedparam(in_readerThreads[i].native_handle(), SCHED_FIFO, &sch)
 		}
 		if (in_writers[i]) {
 			in_writerThreads[i] = std::thread(&RelayWriter::relay_write, in_writers[i]);
+			pthread_getschedparam(in_writerThreads[i].native_handle(), &policy, &sch);
+			sch.sched_priority = 99;
+			pthread_setschedparam(in_writerThreads[i].native_handle(), SCHED_FIFO, &sch)
 		}
 		if (out_readers[i]) {
 			out_readerThreads[i] = std::thread(&RelayReader::relay_read, out_readers[i]);
+			pthread_getschedparam(out_readerThreads[i].native_handle(), &policy, &sch);
+			sch.sched_priority = 99;
+			pthread_setschedparam(out_readerThreads[i].native_handle(), SCHED_FIFO, &sch)
 		}
 		if (out_writers[i]) {
 			out_writerThreads[i] = std::thread(&RelayWriter::relay_write, out_writers[i]);
+			pthread_getschedparam(out_writerThreads[i].native_handle(), &policy, &sch);
+			sch.sched_priority = 99;
+			pthread_setschedparam(out_writerThreads[i].native_handle(), SCHED_FIFO, &sch)
 		}
 	}
 }
