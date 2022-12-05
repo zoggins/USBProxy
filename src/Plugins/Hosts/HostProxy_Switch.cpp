@@ -71,16 +71,3 @@ bool HostProxy_Switch::do_not_send(__u8 endpoint, int* length)
 
 	return false;
 }
-
-static HostProxy_Switch *proxy;
-
-extern "C" {
-	HostProxy * get_hostproxy_plugin(ConfigParser *cfg) {
-		proxy = new HostProxy_Switch(cfg);
-		return (HostProxy *) proxy;
-	}
-	
-	void destroy_plugin() {
-		delete proxy;
-	}
-}
