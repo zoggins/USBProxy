@@ -49,6 +49,7 @@ void usage(char *arg) {
 	printf("\t-n RetroSpy Evercade mode\n");
 	printf("\t-q RetroSpy PS4 mode\n");
 	printf("\t-5 RetroSpy A500 Mini mode\n");
+	printf("\t-6 RetroSpy Genesis Mini 2 mode\n");
 	printf("\t-k Keylogger with ROT13 filter (for demo), specify optional filename to output to instead of stderr\n");
 	printf("\t-w <filename> Write to pcap file for viewing in Wireshark\n");
 	printf("\t-h Display this message\n");
@@ -101,7 +102,7 @@ extern "C" int main(int argc, char **argv)
 	
 	ConfigParser *cfg = new ConfigParser();
 
-	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgujVnq5")) != EOF) {
+	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgujVnq56")) != EOF) {
 		switch (opt) {
 		case 'v':
 			cfg->set("vendorId", optarg);
@@ -229,6 +230,12 @@ extern "C" int main(int argc, char **argv)
 			cfg->add_pointer("PacketFilter_PS4::file", stdout);
 			cfg->set("DeviceProxy", "DeviceProxy_PS4");
 			device_set = true;
+			break;
+		case '6':
+			cfg->add_to_vector("Plugins", "PacketFilter_Switch");
+			cfg->add_pointer("PacketFilter_Switch::file", stdout);
+			cfg->set("HostProxy", "HostProxy_GenMini");
+			host_set = true;
 			break;
 		case 'h':
 		default:
