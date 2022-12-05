@@ -31,7 +31,7 @@ set_source_files_properties(HostProxy_Xbox.cpp PROPERTIES COMPILE_FLAGS  "-std=c
 add_library(HostProxy_PS3 SHARED HostProxy_PS3.cpp HostProxy_GadgetFS.cpp GadgetFS_helpers.c)
 set_target_properties(HostProxy_PS3 PROPERTIES PREFIX "")
 set_source_files_properties(HostProxy_PS3.cpp PROPERTIES COMPILE_FLAGS  "-std=c++11 -pthread -Wall -O3")
-add_library(HostProxy_Switch SHARED HostProxy_Switch.cpp HostProxy_GadgetFS.cpp GadgetFS_helpers.c)
+add_library(HostProxy_Switch SHARED HostProxy_Switch.cpp HostProxy_GadgetFS.cpp GadgetFS_helpers.c Switch_static.cpp)
 set_target_properties(HostProxy_Switch PROPERTIES PREFIX "")
 set_source_files_properties(HostProxy_Switch.cpp PROPERTIES COMPILE_FLAGS  "-std=c++11 -pthread -Wall -O3")
 add_library(HostProxy_GenMini SHARED HostProxy_GenMini.cpp HostProxy_GadgetFS.cpp GadgetFS_helpers.c)

@@ -22,55 +22,10 @@
 #include "Endpoint.h"
 
 HostProxy_GenMini::HostProxy_GenMini(ConfigParser *cfg)
-	: HostProxy_GadgetFS(cfg)
-{
-        rateLocked = false;
-        rateLimit = 1;
-        roundNum = 0;
-        lastNumInFlight = 0;
-}
+	: HostProxy_Switch(cfg)
+{ }
 
 HostProxy_GenMini::~HostProxy_GenMini() {}
-
-bool HostProxy_GenMini::do_not_send(__u8 endpoint, int* length)
-{
-        // Switch can't seem to handle high-speed transfers, which we convert
-        // everything to high speed because gadgetfs is weird.
-        // So here is a simple rate limiter that seems to work.
-
-        if (endpoint == 0x81)
-        {
-                roundNum++;
-                if (!rateLocked && (roundNum % 100) == 0)
-                {
-                        if (numInFlight < 5)
-                        {
-                                rateLocked = true;
-                        }
-                        else if (lastNumInFlight > numInFlight)
-                        {
-                                rateLocked = true;
-                        }
-                        else if (lastNumInFlight == 0 || (lastNumInFlight < numInFlight))
-                        {
-                                lastNumInFlight = numInFlight;
-                                ++rateLimit;
-                        }
-                }
-
-                if ((roundNum % rateLimit) == 0)
-                {
-                        return false;
-                }
-                else
-                {
-                        *length = 0;
-                        return true;
-                }
-        }
-
-        return false;
-}
 
 int HostProxy_GenMini::send_descriptor(int p_device_file, char* descriptor, int descriptorLength, Device* device)
 {
