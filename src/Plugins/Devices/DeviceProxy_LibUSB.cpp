@@ -160,56 +160,63 @@ int DeviceProxy_LibUSB::connect(int vendorId, int productId, bool includeHubs) {
 	libusb_device **list = NULL;
 	libusb_device *found = NULL;
 
-	ssize_t cnt = libusb_get_device_list(context, &list);
-	if (cnt < 0) {
-		if (debugLevel) {
-			cerr << "Error retrieving device list: " << libusb_strerror((libusb_error)cnt) << endl;
-		}
-		return cnt;
-	}
-
-	ssize_t i = 0;
-
 	struct libusb_device_descriptor desc;
 	int rc = 0;
-
-	for (i = 0; i < cnt; i++) {
-		libusb_device *dvc = list[i];
-		rc = libusb_get_device_descriptor(dvc, &desc);
-		if (rc != LIBUSB_SUCCESS) {
+	
+	while (true)
+	{
+		ssize_t cnt = libusb_get_device_list(context, &list);
+		if (cnt < 0) {
 			if (debugLevel) {
-				cerr << "Error retrieving device descriptor: " << libusb_strerror((libusb_error)rc) << endl;
+				cerr << "Error retrieving device list: " << libusb_strerror((libusb_error)cnt) << endl;
 			}
+			return cnt;
+		}
+
+		ssize_t i = 0;
+	
+		rc = 0;
+
+		for (i = 0; i < cnt; i++) {
+			libusb_device *dvc = list[i];
+			rc = libusb_get_device_descriptor(dvc, &desc);
+			if (rc != LIBUSB_SUCCESS) {
+				if (debugLevel) {
+					cerr << "Error retrieving device descriptor: " << libusb_strerror((libusb_error)rc) << endl;
+				}
+			}
+			else {
+				if ((includeHubs || desc.bDeviceClass != LIBUSB_CLASS_HUB)
+					&& (vendorId == desc.idVendor || vendorId == LIBUSB_HOTPLUG_MATCH_ANY)
+					&& (productId == desc.idProduct || productId == LIBUSB_HOTPLUG_MATCH_ANY)) {
+					found = dvc;
+					break;
+				}
+			}
+		}
+
+		if (found == NULL) {
+			if (debugLevel) {
+				cerr << "No device found." << endl;
+			}
+			libusb_free_device_list(list, 1);
+			//return -1;
 		}
 		else {
-			if ((includeHubs || desc.bDeviceClass != LIBUSB_CLASS_HUB)
-				&& (vendorId == desc.idVendor || vendorId == LIBUSB_HOTPLUG_MATCH_ANY)
-				&& (productId == desc.idProduct || productId == LIBUSB_HOTPLUG_MATCH_ANY)) {
-				found = dvc;
-				break;
+			rc = libusb_open(found, &dev_handle);
+			if (rc != LIBUSB_SUCCESS) {
+				if (debugLevel) {
+					cerr << "Error opening device handle: " << libusb_strerror((libusb_error)rc) << endl;
+				}
+				dev_handle = NULL;
+				libusb_free_device_list(list, 1);
+				return rc;
 			}
+			sleep(1);
+			break;
 		}
 	}
-
-	if (found == NULL) {
-		if (debugLevel) {
-			cerr << "No device found." << endl;
-		}
-		libusb_free_device_list(list, 1);
-		return -1;
-	}
-	else {
-		rc = libusb_open(found, &dev_handle);
-		if (rc != LIBUSB_SUCCESS) {
-			if (debugLevel) {
-				cerr << "Error opening device handle: " << libusb_strerror((libusb_error)rc) << endl;
-			}
-			dev_handle = NULL;
-			libusb_free_device_list(list, 1);
-			return rc;
-		}
-	}
-
+	
 	libusb_free_device_list(list, 1);
 
 	// begin

@@ -23,11 +23,11 @@
 
 std::atomic<int> HostProxy_GadgetFS::numInFlight;
 
-void HostProxy_GadgetFS::aio_send_completion_handler(sigval_t sigval)
+void HostProxy_GadgetFS::aio_send_completion_handler(sigval _sigval)
 {
 	numInFlight--;
 	struct aiocb* aio;
-	aio = (struct aiocb*)sigval.sival_ptr;
+	aio = (struct aiocb*)_sigval.sival_ptr;
 	free((void*)aio->aio_buf);
 	free((void*)aio);
 }

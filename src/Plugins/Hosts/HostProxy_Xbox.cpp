@@ -23,10 +23,10 @@
 
 pthread_mutex_t HostProxy_Xbox::lock;
 
-void HostProxy_Xbox::xbox_aio_send_completion_handler(sigval_t sigval)
+void HostProxy_Xbox::xbox_aio_send_completion_handler(sigval _sigval)
 {
 	struct aiocb* aio;
-	aio = (struct aiocb*)sigval.sival_ptr;
+	aio = (struct aiocb*)_sigval.sival_ptr;
 	pthread_mutex_lock(&lock);
 	if (aio->aio_buf != NULL)
 	{

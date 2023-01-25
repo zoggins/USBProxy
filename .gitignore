@@ -30,3 +30,4 @@ build
 CodeDB
 VisualGDB
 VisualGDBCache
+/.visualgdb/CodeExplorer/NodeFlags.dat

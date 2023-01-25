@@ -11,7 +11,7 @@ class HostProxy_Xbox: public HostProxy_GadgetFS {
 
 private:
 	static pthread_mutex_t lock;
-	static void xbox_aio_send_completion_handler(sigval_t sigval);
+	static void xbox_aio_send_completion_handler(sigval _sigval);
 
 protected:
 

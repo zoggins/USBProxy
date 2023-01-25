@@ -18,7 +18,7 @@ extern "C" {
 #include <pthread.h>
 #include <atomic>
 
-typedef void (*send_completion_handler)(sigval_t sigval);
+typedef void (*send_completion_handler)(sigval _sigval);
 
 class HostProxy_GadgetFS: public HostProxy {
 private:
@@ -36,7 +36,7 @@ private:
 
 	usb_ctrlrequest lastControl;
 
-	static void aio_send_completion_handler(sigval_t sigval);
+	static void aio_send_completion_handler(sigval _sigval);
 
 protected:
 
