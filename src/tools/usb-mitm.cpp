@@ -102,7 +102,7 @@ extern "C" int main(int argc, char **argv)
 	
 	ConfigParser *cfg = new ConfigParser();
 
-	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgujVnq56")) != EOF) {
+	while ((opt = getopt (argc, argv, "v:p:P:D:H:dsc:C:lmik::w:hxyzbgujVnq567")) != EOF) {
 		switch (opt) {
 		case 'v':
 			cfg->set("vendorId", optarg);
@@ -236,6 +236,10 @@ extern "C" int main(int argc, char **argv)
 			cfg->add_pointer("PacketFilter_Switch::file", stdout);
 			cfg->set("HostProxy", "HostProxy_GenMini");
 			host_set = true;
+			break;
+		case '7':
+			cfg->add_to_vector("Plugins", "PacketFilter_PS4");
+			cfg->add_pointer("PacketFilter_PS4::file", stdout);
 			break;
 		case 'h':
 		default:
