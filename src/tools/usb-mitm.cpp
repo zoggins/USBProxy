@@ -47,9 +47,10 @@ void usage(char *arg) {
 	printf("\t-m RetroSpy TG16 mode\n");
 	printf("\t-V RetroSpy VCS mode\n");
 	printf("\t-n RetroSpy Evercade mode\n");
-	printf("\t-q RetroSpy PS4 mode\n");
+	printf("\t-q RetroSpy PS4 mode for Cronus Zen\n");
 	printf("\t-5 RetroSpy A500 Mini mode\n");
 	printf("\t-6 RetroSpy Genesis Mini mode\n");
+	printf("\t-7 RetroSpy PS4\n");
 	printf("\t-k Keylogger with ROT13 filter (for demo), specify optional filename to output to instead of stderr\n");
 	printf("\t-w <filename> Write to pcap file for viewing in Wireshark\n");
 	printf("\t-h Display this message\n");
@@ -240,6 +241,8 @@ extern "C" int main(int argc, char **argv)
 		case '7':
 			cfg->add_to_vector("Plugins", "PacketFilter_PS4");
 			cfg->add_pointer("PacketFilter_PS4::file", stdout);
+			cfg->set("HostProxy", "HostProxy_PS4");
+			host_set = true;
 			break;
 		case 'h':
 		default:
