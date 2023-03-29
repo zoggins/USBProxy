@@ -85,3 +85,13 @@ bool DeviceProxy_Xbox360::skip_action(const char* action)
 
 	return false;
 }
+
+void DeviceProxy_Xbox360::patch_ctrlrequest_repsonse(const usb_ctrlrequest *setup_packet, int* rc, unsigned char* dataptr)
+{
+    if (setup_packet->bRequestType == 0xc1 && setup_packet->bRequest == 0x86 && (rc == 0 || dataptr[0] == 0))
+    {
+            dataptr[0] = 1;
+            dataptr[1] = 0;
+            *rc = 2;
+    }
+}

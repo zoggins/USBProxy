@@ -347,6 +347,8 @@ int DeviceProxy_LibUSB::control_request(const usb_ctrlrequest *setup_packet, int
 		return 0;
 	}
 
+	patch_ctrlrequest_repsonse(setup_packet, &rc, dataptr);
+		
 	if (rc < 0 && !swallow_setup_packet_send_error(setup_packet)) {
 		if (debugLevel) {
 			cerr << "Error sending setup packet: " << libusb_strerror((libusb_error)rc) << endl;

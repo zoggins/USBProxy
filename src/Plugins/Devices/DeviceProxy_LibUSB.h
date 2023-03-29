@@ -42,6 +42,7 @@ protected:
 	virtual void set_identity(const char* manufacturer, const char* product, const char* serialNumber);
 	virtual bool skip_action(const char* action);
 	virtual bool ignore_endpoints(uint8_t endpoint);
+	virtual void patch_ctrlrequest_repsonse(const usb_ctrlrequest *setup_packet, int* rc, unsigned char* dataptr);
 
 public:
 	DeviceProxy_LibUSB(int vendorId = LIBUSB_HOTPLUG_MATCH_ANY, int productId = LIBUSB_HOTPLUG_MATCH_ANY,
