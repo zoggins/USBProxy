@@ -354,6 +354,8 @@ int DeviceProxy_LibUSB::control_request(const usb_ctrlrequest *setup_packet, int
 		return 0;
 	}
 
+	patch_ctrlrequest_response(setup_packet, &rc, dataptr);
+		
 	if (rc < 0 && !swallow_setup_packet_send_error(setup_packet)) {
 		if (debugLevel) {
 			cerr << "Error sending setup packet: " << libusb_strerror((libusb_error)rc) << endl;
@@ -577,4 +579,9 @@ int DeviceProxy_LibUSB::num_interfaces(Configuration* cfg)
 bool DeviceProxy_LibUSB::ignore_endpoints(uint8_t endpoint)
 {
 	return false;
+}
+
+void DeviceProxy_LibUSB::patch_ctrlrequest_response(const usb_ctrlrequest *setup_packet, int* rc, unsigned char* dataptr)
+{
+	return;
 }
