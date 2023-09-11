@@ -25,6 +25,8 @@ public:
 protected:
 	virtual void set_identity(const char* manufacturer, const char* product, const char* serialNumber);
 	virtual bool skip_action(const char* action);
+	virtual void patch_ctrlrequest_response(const usb_ctrlrequest *setup_packet, int* rc, unsigned char* dataptr);
+
 
 
 };
